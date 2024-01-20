@@ -29,7 +29,10 @@
       }
     });
 
-    rq.msgAndRedirect(data, error, '/');
+    if (error) rq.msgError(error.msg);
+    else {
+      rq.msgAndRedirect(data, undefined, '/', () => rq.setLogined(data.data.item));
+    }
   }
 </script>
 
