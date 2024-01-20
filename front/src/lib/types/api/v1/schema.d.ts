@@ -9,11 +9,17 @@ export interface paths {
     get: operations["getPost"];
     put: operations["edit"];
   };
+  "/api/v1/members/logout": {
+    post: operations["logout"];
+  };
   "/api/v1/members/login": {
     post: operations["login"];
   };
   "/api/v1/posts": {
     get: operations["getPosts"];
+  };
+  "/api/v1/members/me": {
+    get: operations["getMe"];
   };
 }
 
@@ -112,6 +118,18 @@ export interface components {
       success: boolean;
       fail: boolean;
     };
+    MeResponseBody: {
+      item: components["schemas"]["MemberDto"];
+    };
+    RsDataMeResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["MeResponseBody"];
+      success: boolean;
+      fail: boolean;
+    };
   };
   responses: never;
   parameters: never;
@@ -173,6 +191,22 @@ export interface operations {
       };
     };
   };
+  logout: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
   login: {
     requestBody: {
       content: {
@@ -200,6 +234,22 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataGetPostsResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  getMe: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataMeResponseBody"];
         };
       };
       /** @description Internal Server Error */
