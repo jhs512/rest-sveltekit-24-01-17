@@ -18,6 +18,15 @@
 {:then { data: { item: post } }}
   <h1>{post.title}</h1>
   <div class="whitespace-pre-line">{post.body}</div>
+  <div>
+    {#if post.actorCanDelete}
+      <button>삭제</button>
+    {/if}
+
+    {#if post.actorCanEdit}
+      <a href="/p/{post.id}/edit">수정</a>
+    {/if}
+  </div>
 {:catch error}
   {error.msg}
 {/await}

@@ -58,6 +58,9 @@ export interface components {
       title: string;
       body: string;
       published: boolean;
+      actorCanRead?: boolean;
+      actorCanEdit?: boolean;
+      actorCanDelete?: boolean;
     };
     RsDataEditResponseBody: {
       resultCode: string;
