@@ -5,11 +5,12 @@
 
 
 export interface paths {
-  "/api/v1/posts": {
-    get: operations["getPosts"];
-  };
   "/api/v1/posts/{id}": {
     get: operations["getPost"];
+    put: operations["edit"];
+  };
+  "/api/v1/posts": {
+    get: operations["getPosts"];
   };
 }
 
@@ -27,8 +28,12 @@ export interface components {
       success: boolean;
       fail: boolean;
     };
-    GetPostsResponseBody: {
-      items: components["schemas"]["PostDto"][];
+    EditRequestBody: {
+      title: string;
+      body: string;
+    };
+    EditResponseBody: {
+      item: components["schemas"]["PostDto"];
     };
     PostDto: {
       /** Format: int64 */
@@ -42,6 +47,18 @@ export interface components {
       authorName: string;
       title: string;
       body: string;
+    };
+    RsDataEditResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["EditResponseBody"];
+      success: boolean;
+      fail: boolean;
+    };
+    GetPostsResponseBody: {
+      items: components["schemas"]["PostDto"][];
     };
     RsDataGetPostsResponseBody: {
       resultCode: string;
@@ -78,22 +95,6 @@ export type external = Record<string, never>;
 
 export interface operations {
 
-  getPosts: {
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": components["schemas"]["RsDataGetPostsResponseBody"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        content: {
-          "*/*": components["schemas"]["RsDataEmpty"];
-        };
-      };
-    };
-  };
   getPost: {
     parameters: {
       path: {
@@ -105,6 +106,48 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataGetPostResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  edit: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EditRequestBody"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataEditResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  getPosts: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataGetPostsResponseBody"];
         };
       };
       /** @description Internal Server Error */

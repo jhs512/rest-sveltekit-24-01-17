@@ -8,6 +8,9 @@ class Rq {
       credentials: 'include'
     });
   }
+  public msgError(msg: string) {
+    window.alert(msg);
+  }
 }
 
 const rq = new Rq();
