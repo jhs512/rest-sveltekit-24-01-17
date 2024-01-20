@@ -3,9 +3,11 @@
   import rq from '$lib/rq/rq.svelte';
 
   async function load() {
-    const { data } = await rq
+    const { data, error } = await rq
       .apiEndPoints()
       .GET('/api/v1/posts/{id}', { params: { path: { id: parseInt($page.params.id) } } });
+
+    if (error) throw error;
 
     return data!;
   }
@@ -15,5 +17,7 @@
   <div>loading...</div>
 {:then { data: { item: post } }}
   <h1>{post.title}</h1>
-  <p>{post.body}</p>
+  <div class="whitespace-pre-line">{post.body}</div>
+{:catch error}
+  {error.msg}
 {/await}
