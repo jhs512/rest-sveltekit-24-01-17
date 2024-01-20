@@ -19,6 +19,10 @@ class Rq {
     goto(url, { replaceState: true });
   }
 
+  public reload() {
+    this.replace('/redirect?url=' + window.location.href);
+  }
+
   // API END POINTS
   public apiEndPoints() {
     return createClient<paths>({
@@ -127,6 +131,25 @@ class Rq {
 
     this.setLogout();
     this.replace(url);
+  }
+
+  // 글
+  public async confirmAndDeletePost(
+    post: components['schemas']['PostDto'],
+    callback: string | Function
+  ) {
+    if (!window.confirm('삭제하시겠습니까?')) return;
+
+    await this.apiEndPoints().DELETE('/api/v1/posts/{id}', {
+      params: {
+        path: {
+          id: post.id
+        }
+      }
+    });
+
+    if (typeof callback === 'function') callback();
+    else this.replace(callback);
   }
 }
 

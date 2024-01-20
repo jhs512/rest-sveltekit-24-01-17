@@ -8,6 +8,7 @@ export interface paths {
   "/api/v1/posts/{id}": {
     get: operations["getPost"];
     put: operations["edit"];
+    delete: operations["delete"];
   };
   "/api/v1/members/logout": {
     post: operations["logout"];
@@ -184,6 +185,27 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataEditResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  delete: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
         };
       };
       /** @description Internal Server Error */
