@@ -9,6 +9,9 @@ export interface paths {
     get: operations["getPost"];
     put: operations["edit"];
   };
+  "/api/v1/members/login": {
+    post: operations["login"];
+  };
   "/api/v1/posts": {
     get: operations["getPosts"];
   };
@@ -56,6 +59,32 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["EditResponseBody"];
+      success: boolean;
+      fail: boolean;
+    };
+    LoginRequestBody: {
+      username: string;
+      password: string;
+    };
+    LoginResponseBody: {
+      item: components["schemas"]["MemberDto"];
+    };
+    MemberDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      /** Format: date-time */
+      modifyDate: string;
+      username: string;
+      authorities: string[];
+    };
+    RsDataLoginResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["LoginResponseBody"];
       success: boolean;
       fail: boolean;
     };
@@ -134,6 +163,27 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataEditResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  login: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LoginRequestBody"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataLoginResponseBody"];
         };
       };
       /** @description Internal Server Error */
