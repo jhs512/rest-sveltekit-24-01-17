@@ -8,6 +8,9 @@ export interface paths {
   "/api/v1/posts": {
     get: operations["getPosts"];
   };
+  "/api/v1/posts/{id}": {
+    get: operations["getPost"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -39,6 +42,18 @@ export interface components {
       success: boolean;
       fail: boolean;
     };
+    GetPostResponseBody: {
+      item: components["schemas"]["PostDto"];
+    };
+    RsDataGetPostResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetPostResponseBody"];
+      success: boolean;
+      fail: boolean;
+    };
   };
   responses: never;
   parameters: never;
@@ -59,6 +74,21 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataGetPostsResponseBody"];
+        };
+      };
+    };
+  };
+  getPost: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataGetPostResponseBody"];
         };
       };
     };
