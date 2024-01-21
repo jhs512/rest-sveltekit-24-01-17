@@ -58,6 +58,8 @@ export interface components {
       authorName: string;
       title: string;
       published: boolean;
+      /** Format: int64 */
+      likesCount: number;
       actorCanRead?: boolean;
       actorCanEdit?: boolean;
       actorCanDelete?: boolean;
@@ -113,6 +115,8 @@ export interface components {
       authorName: string;
       title: string;
       published: boolean;
+      /** Format: int64 */
+      likesCount: number;
       actorCanRead?: boolean;
       actorCanEdit?: boolean;
       actorCanDelete?: boolean;
