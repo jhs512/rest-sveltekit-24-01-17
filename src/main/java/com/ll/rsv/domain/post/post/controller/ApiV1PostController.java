@@ -1,7 +1,7 @@
 package com.ll.rsv.domain.post.post.controller;
 
-import com.ll.rsv.domain.post.post.dto.PostWithBodyDto;
 import com.ll.rsv.domain.post.post.dto.PostDto;
+import com.ll.rsv.domain.post.post.dto.PostWithBodyDto;
 import com.ll.rsv.domain.post.post.entity.Post;
 import com.ll.rsv.domain.post.post.service.PostService;
 import com.ll.rsv.global.exceptions.GlobalException;
