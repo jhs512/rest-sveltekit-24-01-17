@@ -10,6 +10,9 @@ export interface paths {
     put: operations["edit"];
     delete: operations["delete"];
   };
+  "/api/v1/posts/{id}/like": {
+    post: operations["like"];
+  };
   "/api/v1/members/logout": {
     post: operations["logout"];
   };
@@ -21,6 +24,9 @@ export interface paths {
   };
   "/api/v1/members/me": {
     get: operations["getMe"];
+  };
+  "/api/v1/posts/{id}/cancelLike": {
+    delete: operations["cancelLike"];
   };
 }
 
@@ -63,6 +69,8 @@ export interface components {
       actorCanRead?: boolean;
       actorCanEdit?: boolean;
       actorCanDelete?: boolean;
+      actorCanLike?: boolean;
+      actorCanCancelLike?: boolean;
       body: string;
     };
     RsDataEditResponseBody: {
@@ -71,6 +79,38 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["EditResponseBody"];
+      success: boolean;
+      fail: boolean;
+    };
+    LikeResponseBody: {
+      item: components["schemas"]["PostDto"];
+    };
+    PostDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      /** Format: date-time */
+      modifyDate: string;
+      /** Format: int64 */
+      authorId: number;
+      authorName: string;
+      title: string;
+      published: boolean;
+      /** Format: int64 */
+      likesCount: number;
+      actorCanRead?: boolean;
+      actorCanEdit?: boolean;
+      actorCanDelete?: boolean;
+      actorCanLike?: boolean;
+      actorCanCancelLike?: boolean;
+    };
+    RsDataLikeResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["LikeResponseBody"];
       success: boolean;
       fail: boolean;
     };
@@ -103,24 +143,6 @@ export interface components {
     GetPostsResponseBody: {
       items: components["schemas"]["PostDto"][];
     };
-    PostDto: {
-      /** Format: int64 */
-      id: number;
-      /** Format: date-time */
-      createDate: string;
-      /** Format: date-time */
-      modifyDate: string;
-      /** Format: int64 */
-      authorId: number;
-      authorName: string;
-      title: string;
-      published: boolean;
-      /** Format: int64 */
-      likesCount: number;
-      actorCanRead?: boolean;
-      actorCanEdit?: boolean;
-      actorCanDelete?: boolean;
-    };
     RsDataGetPostsResponseBody: {
       resultCode: string;
       /** Format: int32 */
@@ -151,6 +173,18 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MeResponseBody"];
+      success: boolean;
+      fail: boolean;
+    };
+    CancelLikeResponseBody: {
+      item: components["schemas"]["PostDto"];
+    };
+    RsDataCancelLikeResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["CancelLikeResponseBody"];
       success: boolean;
       fail: boolean;
     };
@@ -236,6 +270,27 @@ export interface operations {
       };
     };
   };
+  like: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataLikeResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
   logout: {
     responses: {
       /** @description OK */
@@ -295,6 +350,27 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataMeResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  cancelLike: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataCancelLikeResponseBody"];
         };
       };
       /** @description Internal Server Error */

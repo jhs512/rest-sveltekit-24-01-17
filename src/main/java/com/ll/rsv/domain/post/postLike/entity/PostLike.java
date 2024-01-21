@@ -5,17 +5,18 @@ import com.ll.rsv.domain.post.post.entity.Post;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import lombok.*;
+import lombok.experimental.Delegate;
 
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PROTECTED)
-@Getter
 @ToString
 @EqualsAndHashCode
 public class PostLike {
     @EmbeddedId
+    @Delegate
     private PostLikeId id;
 
     @Builder
