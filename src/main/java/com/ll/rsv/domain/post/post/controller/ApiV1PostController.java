@@ -97,7 +97,7 @@ public class ApiV1PostController {
     }
 
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     @Transactional
     public RsData<Empty> delete(
             @PathVariable long id

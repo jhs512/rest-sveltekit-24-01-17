@@ -13,10 +13,11 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PROTECTED)
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class PostLike {
     @EmbeddedId
     @Delegate
+    @EqualsAndHashCode.Include
     private PostLikeId id;
 
     @Builder

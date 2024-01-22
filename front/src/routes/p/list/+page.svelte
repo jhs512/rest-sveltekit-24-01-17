@@ -42,7 +42,7 @@
             onclick={() =>
               rq.like(post, (data) => {
                 Object.assign(post, data.data.item);
-                alert(data.msg);
+                rq.msgInfo(data.msg);
               })}>추천</button
           >
         {/if}
@@ -52,7 +52,7 @@
             onclick={() =>
               rq.cancelLike(post, (data) => {
                 Object.assign(post, data.data.item);
-                alert(data.msg);
+                rq.msgInfo(data.msg);
               })}>추천취소</button
           >
         {/if}
