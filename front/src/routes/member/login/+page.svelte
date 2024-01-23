@@ -50,6 +50,6 @@
   <div>
     <div>로그인</div>
     <button type="submit">로그인</button>
-    <a href="?">카카오로그인</a>
+    <a href={rq.getKakaoLoginUrl()}>카카오로그인</a>
   </div>
 </form>
