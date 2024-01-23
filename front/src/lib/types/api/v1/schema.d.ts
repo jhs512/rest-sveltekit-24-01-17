@@ -41,8 +41,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["Empty"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     EditRequestBody: {
       title: string;
@@ -79,8 +79,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["EditResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     LikeResponseBody: {
       item: components["schemas"]["PostDto"];
@@ -111,8 +111,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["LikeResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     LoginRequestBody: {
       username: string;
@@ -138,8 +138,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["LoginResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetPostsResponseBody: {
       items: components["schemas"]["PostDto"][];
@@ -150,8 +150,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostsResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     GetPostResponseBody: {
       item: components["schemas"]["PostWithBodyDto"];
@@ -162,8 +162,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     MeResponseBody: {
       item: components["schemas"]["MemberDto"];
@@ -174,8 +174,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MeResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
     CancelLikeResponseBody: {
       item: components["schemas"]["PostDto"];
@@ -186,8 +186,8 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CancelLikeResponseBody"];
-      fail: boolean;
       success: boolean;
+      fail: boolean;
     };
   };
   responses: never;
