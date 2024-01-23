@@ -62,6 +62,7 @@ export interface components {
       /** Format: int64 */
       authorId: number;
       authorName: string;
+      authorProfileImgUrl: string;
       title: string;
       published: boolean;
       /** Format: int64 */
@@ -95,6 +96,7 @@ export interface components {
       /** Format: int64 */
       authorId: number;
       authorName: string;
+      authorProfileImgUrl: string;
       title: string;
       published: boolean;
       /** Format: int64 */
