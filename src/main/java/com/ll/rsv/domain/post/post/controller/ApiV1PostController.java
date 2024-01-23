@@ -28,6 +28,22 @@ public class ApiV1PostController {
     private final Rq rq;
 
 
+    public record MakeTempResponseBody(@NonNull PostDto item) {
+    }
+
+    @Transactional
+    @PostMapping("/temp")
+    public RsData<MakeTempResponseBody> makeTemp() {
+        RsData<Post> findTempOrMakeRsData = postService.findTempOrMake(rq.getMember());
+
+        return findTempOrMakeRsData.newDataOf(
+                new MakeTempResponseBody(
+                        postToDto(findTempOrMakeRsData.getData())
+                )
+        );
+    }
+
+
     public record GetPostsResponseBody(@NonNull List<PostDto> items) {
     }
 

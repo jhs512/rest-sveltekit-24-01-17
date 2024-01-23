@@ -13,6 +13,9 @@ export interface paths {
   "/api/v1/posts/{id}/like": {
     post: operations["like"];
   };
+  "/api/v1/posts/temp": {
+    post: operations["makeTemp"];
+  };
   "/api/v1/members/logout": {
     post: operations["logout"];
   };
@@ -113,6 +116,18 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["LikeResponseBody"];
+      success: boolean;
+      fail: boolean;
+    };
+    MakeTempResponseBody: {
+      item: components["schemas"]["PostDto"];
+    };
+    RsDataMakeTempResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["MakeTempResponseBody"];
       success: boolean;
       fail: boolean;
     };
@@ -284,6 +299,22 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataLikeResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  makeTemp: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataMakeTempResponseBody"];
         };
       };
       /** @description Internal Server Error */
