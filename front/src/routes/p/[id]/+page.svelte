@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
+  import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -20,7 +21,11 @@
 {:then { data: { item: post } }}
   <h1>{post.title}</h1>
   <div>추천 : {post.likesCount}</div>
-  <div class="whitespace-pre-line">{post.body}</div>
+
+  {#key post.id}
+    <ToastUiEditor body={post.body} viewer={true} />
+  {/key}
+
   <div>
     {#if post.actorCanDelete}
       <button onclick={() => rq.confirmAndDeletePost(post, '/p/list')}>삭제</button>
