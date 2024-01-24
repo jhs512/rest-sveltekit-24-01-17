@@ -29,7 +29,7 @@
       });
   }
 
-  $effect(async () => {
+  rq.effect(async () => {
     const [
       { default: Editor },
       { default: codeSyntaxHighlight },
@@ -319,33 +319,32 @@
             }
           },
           language: 'ko-KR',
-          placeholder: stripIndent(`
-            $$config
-            title: 제목
-            open: true
-            $$
-            `).trim(),
+          placeholder: stripIndent(`내용을 입력해주세요.`).trim(),
           ...editorConfig
         });
 
-    editor.addCommand('markdown', 'openImageUploader', () => {
-      window.open('http://onpaste.com/');
-      return true;
-    });
+    editor.addCommand &&
+      editor.addCommand('markdown', 'openImageUploader', () => {
+        window.open('http://onpaste.com/');
+        return true;
+      });
 
-    editor.removeToolbarItem('image');
-    editor.insertToolbarItem(
-      { groupIndex: 3, itemIndex: 1 },
-      {
-        name: 'img',
-        tooltip:
-          '이미지를 드래그 앤 드롭하세요. 혹은 붙여넣기하세요. 마지막에 I 버튼 눌러서 URL 생성하세요.',
-        className: 'toastui-editor-toolbar-icons',
-        style: { backgroundPosition: '-309px 3px' },
-        command: 'openImageUploader'
-      }
-    );
+    editor.removeToolbarItem && editor.removeToolbarItem('image');
+    editor.insertToolbarItem &&
+      editor.insertToolbarItem(
+        { groupIndex: 3, itemIndex: 1 },
+        {
+          name: 'img',
+          tooltip:
+            '이미지를 드래그 앤 드롭하세요. 혹은 붙여넣기하세요. 마지막에 I 버튼 눌러서 URL 생성하세요.',
+          className: 'toastui-editor-toolbar-icons',
+          style: { backgroundPosition: '-309px 3px' },
+          command: 'openImageUploader'
+        }
+      );
+  });
 
+  rq.effect(() => {
     return () => {
       editor.destroy();
     };
