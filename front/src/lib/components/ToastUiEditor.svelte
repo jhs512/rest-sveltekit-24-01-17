@@ -14,11 +14,24 @@
   const {
     body,
     viewer = false,
-    height = 'calc(100dvh - 64px)'
+    height = '300px'
   } = $props<{ body: string; viewer?: boolean; height?: string }>();
 
   let div: HTMLDivElement | undefined = $state();
   let editor: any;
+
+  function toggleFullScreen() {
+    window.document.body.classList.toggle('overflow-hidden');
+
+    if (div) {
+      div.classList.toggle('fixed');
+      div.classList.toggle('top-0');
+      div.classList.toggle('left-0');
+      div.classList.toggle('w-full');
+      div.classList.toggle('!h-[100dvh]');
+      div.classList.toggle('bg-white');
+    }
+  }
 
   function switchTab() {
     div!
@@ -324,10 +337,28 @@
         });
 
     editor.addCommand &&
+      editor.addCommand('markdown', 'toggleFullScreen', () => {
+        toggleFullScreen();
+        return true;
+      });
+
+    editor.addCommand &&
       editor.addCommand('markdown', 'openImageUploader', () => {
         window.open('http://onpaste.com/');
         return true;
       });
+
+    editor.insertToolbarItem &&
+      editor.insertToolbarItem(
+        { groupIndex: 0, itemIndex: 0 },
+        {
+          name: 'fullscreen',
+          tooltip: '풀스크린모드를 해제/설정합니다.',
+          className: '!text-[20px]',
+          text: 'F',
+          command: 'toggleFullScreen'
+        }
+      );
 
     editor.removeToolbarItem && editor.removeToolbarItem('image');
     editor.insertToolbarItem &&
