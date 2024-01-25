@@ -52,6 +52,38 @@
     callback(data!);
   }
 
+  async function submitEditCommentForm(this: HTMLFormElement) {
+    const form: HTMLFormElement = this;
+
+    const idInput = form.elements.namedItem('id') as HTMLInputElement;
+    const id = parseInt(idInput.value);
+
+    const bodyInput = form.elements.namedItem('body') as HTMLTextAreaElement;
+
+    if (bodyInput.value.length === 0) {
+      rq.msgError('내용을 입력해주세요.');
+      bodyInput.focus();
+      return;
+    }
+
+    const { data, error } = await rq
+      .apiEndPoints()
+      .PUT('/api/v1/postComments/{postId}/{postCommentId}', {
+        params: {
+          path: { postId: parseInt($page.params.id), postCommentId: id }
+        },
+        body: {
+          body: bodyInput.value
+        }
+      });
+
+    rq.msgInfo(data!.msg);
+
+    // postComments 맨 앞에 넣고 싶어
+    const oldPostComment = postComments.find((e) => e.id === id)!;
+    Object.assign(oldPostComment, data!.data.item);
+  }
+
   async function submitWriteCommentForm(this: HTMLFormElement) {
     const form: HTMLFormElement = this;
 
@@ -139,25 +171,50 @@
         <div>
           <img src={postComment.authorProfileImgUrl} width="30" class="rounded-full" alt="" />
         </div>
-        <div>
-          {#key postComment.id}
-            <ToastUiEditor body={postComment.body} viewer={true} />
-          {/key}
-        </div>
 
-        <div>
-          {#if postComment.actorCanDelete}
-            <button
-              onclick={() =>
-                confirmAndDeletePostComment(postComment, (data) => {
-                  rq.msgInfo(data.msg);
-                  postComments.splice(postComments.indexOf(postComment), 1);
-                })}>삭제</button
-            >
-          {/if}
+        {#if !postComment.editing}
+          <div>
+            {#key postComment.id}
+              <ToastUiEditor body={postComment.body} viewer={true} />
+            {/key}
+          </div>
 
-          {#if postComment.actorCanEdit}{/if}
-        </div>
+          <div>
+            {#if postComment.actorCanDelete}
+              <button
+                onclick={() =>
+                  confirmAndDeletePostComment(postComment, (data) => {
+                    rq.msgInfo(data.msg);
+                    postComments.splice(postComments.indexOf(postComment), 1);
+                  })}>삭제</button
+              >
+            {/if}
+
+            {#if postComment.actorCanEdit}
+              <button onclick={() => (postComment.editing = !postComment.editing)}>수정</button>
+            {/if}
+          </div>
+        {/if}
+
+        {#if postComment.editing}
+          <div>
+            <form on:submit|preventDefault={submitEditCommentForm}>
+              <input type="hidden" name="id" value={postComment.id} />
+
+              <div>
+                <div>내용</div>
+                <textarea name="body">{postComment.body}</textarea>
+              </div>
+
+              <div>
+                <button type="submit">수정</button>
+                <button type="button" onclick={() => (postComment.editing = !postComment.editing)}
+                  >수정취소</button
+                >
+              </div>
+            </form>
+          </div>
+        {/if}
       </div>
     {/each}
   </div>

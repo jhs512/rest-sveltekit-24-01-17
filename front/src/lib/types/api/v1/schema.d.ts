@@ -10,6 +10,10 @@ export interface paths {
     put: operations["edit"];
     delete: operations["delete"];
   };
+  "/api/v1/postComments/{postId}/{postCommentId}": {
+    put: operations["edit_1"];
+    delete: operations["delete_1"];
+  };
   "/api/v1/posts/{id}/like": {
     post: operations["like"];
   };
@@ -34,9 +38,6 @@ export interface paths {
   };
   "/api/v1/posts/{id}/cancelLike": {
     delete: operations["cancelLike"];
-  };
-  "/api/v1/postComments/{postId}/{postCommentId}": {
-    delete: operations["delete_1"];
   };
 }
 
@@ -93,6 +94,37 @@ export interface components {
       success: boolean;
       fail: boolean;
     };
+    EditCommentRequestBody: {
+      body: string;
+    };
+    EditCommentResponseBody: {
+      item: components["schemas"]["PostCommentDto"];
+    };
+    PostCommentDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      /** Format: date-time */
+      modifyDate: string;
+      /** Format: int64 */
+      authorId: number;
+      authorName: string;
+      authorProfileImgUrl: string;
+      body: string;
+      actorCanEdit?: boolean;
+      actorCanDelete?: boolean;
+      editing?: boolean;
+    };
+    RsDataEditCommentResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["EditCommentResponseBody"];
+      success: boolean;
+      fail: boolean;
+    };
     LikeResponseBody: {
       item: components["schemas"]["PostDto"];
     };
@@ -138,34 +170,19 @@ export interface components {
       success: boolean;
       fail: boolean;
     };
-    WriteRequestBody: {
+    WriteCommentRequestBody: {
       body: string;
     };
-    PostCommentDto: {
-      /** Format: int64 */
-      id: number;
-      /** Format: date-time */
-      createDate: string;
-      /** Format: date-time */
-      modifyDate: string;
-      /** Format: int64 */
-      authorId: number;
-      authorName: string;
-      authorProfileImgUrl: string;
-      body: string;
-      actorCanEdit?: boolean;
-      actorCanDelete?: boolean;
-    };
-    RsDataWriteResponseBody: {
+    RsDataWriteCommentResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["WriteResponseBody"];
+      data: components["schemas"]["WriteCommentResponseBody"];
       success: boolean;
       fail: boolean;
     };
-    WriteResponseBody: {
+    WriteCommentResponseBody: {
       item: components["schemas"]["PostCommentDto"];
     };
     LoginRequestBody: {
@@ -337,6 +354,55 @@ export interface operations {
       };
     };
   };
+  edit_1: {
+    parameters: {
+      path: {
+        postId: number;
+        postCommentId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EditCommentRequestBody"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataEditCommentResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  delete_1: {
+    parameters: {
+      path: {
+        postId: number;
+        postCommentId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
   like: {
     parameters: {
       path: {
@@ -403,14 +469,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["WriteRequestBody"];
+        "application/json": components["schemas"]["WriteCommentRequestBody"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "*/*": components["schemas"]["RsDataWriteResponseBody"];
+          "*/*": components["schemas"]["RsDataWriteCommentResponseBody"];
         };
       };
       /** @description Internal Server Error */
@@ -501,28 +567,6 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataCancelLikeResponseBody"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        content: {
-          "*/*": components["schemas"]["RsDataEmpty"];
-        };
-      };
-    };
-  };
-  delete_1: {
-    parameters: {
-      path: {
-        postId: number;
-        postCommentId: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": components["schemas"]["RsDataEmpty"];
         };
       };
       /** @description Internal Server Error */
