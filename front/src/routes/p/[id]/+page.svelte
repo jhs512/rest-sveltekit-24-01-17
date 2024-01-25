@@ -73,6 +73,9 @@
     bodyInput.value = '';
 
     rq.msgInfo(data!.msg);
+
+    // postComments 맨 앞에 넣고 싶어
+    postComments.unshift(data!.data.item);
   }
 </script>
 
@@ -109,7 +112,7 @@
 <div>
   <h1 class="font-bold text-2xl">댓글작성</h1>
 
-  <form action="" on:submit|preventDefault={submitWriteCommentForm}>
+  <form on:submit|preventDefault={submitWriteCommentForm}>
     <div>
       <div>내용</div>
       <textarea name="body"></textarea>
@@ -128,7 +131,7 @@
 
   <div>
     {#each postComments as postComment}
-      <div>
+      <div class="border">
         <div>번호 : {postComment.id}</div>
         <div>작성 : {prettyDateTime(postComment.createDate)}</div>
         <div>수정 : {prettyDateTime(postComment.modifyDate)}</div>
