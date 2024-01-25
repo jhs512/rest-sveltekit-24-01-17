@@ -97,11 +97,12 @@ public class PostService {
     }
 
     public boolean canRead(Member actor, Post post) {
-        if (actor == null) return false;
         if (post == null) return false;
 
-        if (actor.isAdmin()) return true; // 관리자이면 가능
         if (post.isPublished()) return true; // 공개글이면 가능
+
+        if (actor == null) return false;
+        if (actor.isAdmin()) return true; // 관리자이면 가능
 
         return actor.equals(post.getAuthor()); // 그것도 아니라면 본인이 쓴 글이여야 함
     }
