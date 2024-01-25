@@ -3,6 +3,7 @@
   import rq from '$lib/rq/rq.svelte';
   import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
   import { prettyDateTime } from '$lib/utils';
+  import type { components } from '$lib/types/api/v1/schema';
 
   async function loadPost() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -26,6 +27,23 @@
     if (error) throw error;
 
     return data!;
+  }
+
+  async function confirmAndDeletePostComment(
+    postComment: components['schemas']['PostCommentDto'],
+    callback: (data: components['schemas']['RsDataEmpty']) => void
+  ) {
+    const { data, error } = await rq
+      .apiEndPoints()
+      .DELETE('/api/v1/postComments/{postId}/{postCommentId}', {
+        params: {
+          path: { postId: parseInt($page.params.id), postCommentId: postComment.id }
+        }
+      });
+
+    if (error) throw error;
+
+    callback(data!);
   }
 </script>
 
@@ -78,6 +96,19 @@
           {#key postComment.id}
             <ToastUiEditor body={postComment.body} viewer={true} />
           {/key}
+        </div>
+
+        <div>
+          {#if postComment.actorCanDelete}
+            <button
+              onclick={() =>
+                confirmAndDeletePostComment(postComment, (data) => {
+                  rq.msgInfo(data.msg);
+                })}>삭제</button
+            >
+          {/if}
+
+          {#if postComment.actorCanEdit}{/if}
         </div>
       </div>
     {/each}

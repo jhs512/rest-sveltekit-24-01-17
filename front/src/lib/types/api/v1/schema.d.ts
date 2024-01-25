@@ -34,6 +34,9 @@ export interface paths {
   "/api/v1/posts/{id}/cancelLike": {
     delete: operations["cancelLike"];
   };
+  "/api/v1/postComments/{postId}/{postCommentId}": {
+    delete: operations["delete_1"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -456,6 +459,28 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataCancelLikeResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  delete_1: {
+    parameters: {
+      path: {
+        postId: number;
+        postCommentId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
         };
       };
       /** @description Internal Server Error */
