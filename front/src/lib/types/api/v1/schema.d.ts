@@ -20,9 +20,8 @@ export interface paths {
   "/api/v1/posts/temp": {
     post: operations["makeTemp"];
   };
-  "/api/v1/postComments/{postId}": {
-    get: operations["getPosts_1"];
-    post: operations["write"];
+  "/api/v1/postComments/{postId}/temp": {
+    post: operations["makeTemp_1"];
   };
   "/api/v1/members/logout": {
     post: operations["logout"];
@@ -32,6 +31,9 @@ export interface paths {
   };
   "/api/v1/posts": {
     get: operations["getPosts"];
+  };
+  "/api/v1/postComments/{postId}": {
+    get: operations["getPosts_1"];
   };
   "/api/v1/members/me": {
     get: operations["getMe"];
@@ -169,9 +171,6 @@ export interface components {
       data: components["schemas"]["MakeTempResponseBody"];
       success: boolean;
       fail: boolean;
-    };
-    WriteCommentRequestBody: {
-      body: string;
     };
     RsDataWriteCommentResponseBody: {
       resultCode: string;
@@ -440,36 +439,10 @@ export interface operations {
       };
     };
   };
-  getPosts_1: {
+  makeTemp_1: {
     parameters: {
       path: {
         postId: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": components["schemas"]["RsDataGetPostCommentsResponseBody"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        content: {
-          "*/*": components["schemas"]["RsDataEmpty"];
-        };
-      };
-    };
-  };
-  write: {
-    parameters: {
-      path: {
-        postId: number;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["WriteCommentRequestBody"];
       };
     };
     responses: {
@@ -530,6 +503,27 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataGetPostsResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  getPosts_1: {
+    parameters: {
+      path: {
+        postId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataGetPostCommentsResponseBody"];
         };
       };
       /** @description Internal Server Error */
