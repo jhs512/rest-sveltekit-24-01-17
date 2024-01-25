@@ -5,6 +5,7 @@
   import { prettyDateTime } from '$lib/utils';
   import type { components } from '$lib/types/api/v1/schema';
 
+  const toastUiEditors: Record<number, any> = {};
   let toastUiEditor: any | undefined;
 
   let writePostCommentEditorVersion = $state(0);
@@ -62,11 +63,13 @@
     const idInput = form.elements.namedItem('id') as HTMLInputElement;
     const id = parseInt(idInput.value);
 
-    const bodyInput = form.elements.namedItem('body') as HTMLTextAreaElement;
+    const toastUiEditor = toastUiEditors[id];
 
-    if (bodyInput.value.length === 0) {
+    toastUiEditor.editor.setMarkdown(toastUiEditor.editor.getMarkdown().trim());
+
+    if (toastUiEditor.editor.getMarkdown().trim().length === 0) {
       rq.msgError('내용을 입력해주세요.');
-      bodyInput.focus();
+      toastUiEditor.editor.focus();
       return;
     }
 
@@ -77,14 +80,14 @@
           path: { postId: parseInt($page.params.id), postCommentId: id }
         },
         body: {
-          body: bodyInput.value
+          body: toastUiEditor.editor.getMarkdown()
         }
       });
 
     rq.msgInfo(data!.msg);
 
-    // postComments 맨 앞에 넣고 싶어
     const oldPostComment = postComments.find((e) => e.id === id)!;
+    delete toastUiEditors[id];
     Object.assign(oldPostComment, data!.data.item);
   }
 
@@ -211,7 +214,12 @@
 
               <div>
                 <div>내용</div>
-                <textarea name="body">{postComment.body}</textarea>
+                {#key postComment.id}
+                  <ToastUiEditor
+                    bind:this={toastUiEditors[postComment.id]}
+                    body={postComment.body}
+                  />
+                {/key}
               </div>
 
               <div>
