@@ -16,6 +16,10 @@ export interface paths {
   "/api/v1/posts/temp": {
     post: operations["makeTemp"];
   };
+  "/api/v1/postComments/{postId}": {
+    get: operations["getPosts_1"];
+    post: operations["write"];
+  };
   "/api/v1/members/logout": {
     post: operations["logout"];
   };
@@ -24,9 +28,6 @@ export interface paths {
   };
   "/api/v1/posts": {
     get: operations["getPosts"];
-  };
-  "/api/v1/postComments/{postId}": {
-    get: operations["getPosts_1"];
   };
   "/api/v1/members/me": {
     get: operations["getMe"];
@@ -137,6 +138,36 @@ export interface components {
       success: boolean;
       fail: boolean;
     };
+    WriteRequestBody: {
+      body: string;
+    };
+    PostCommentDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      /** Format: date-time */
+      modifyDate: string;
+      /** Format: int64 */
+      authorId: number;
+      authorName: string;
+      authorProfileImgUrl: string;
+      body: string;
+      actorCanEdit?: boolean;
+      actorCanDelete?: boolean;
+    };
+    RsDataWriteResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["WriteResponseBody"];
+      success: boolean;
+      fail: boolean;
+    };
+    WriteResponseBody: {
+      item: components["schemas"]["PostCommentDto"];
+    };
     LoginRequestBody: {
       username: string;
       password: string;
@@ -190,21 +221,6 @@ export interface components {
     };
     GetPostCommentsResponseBody: {
       items: components["schemas"]["PostCommentDto"][];
-    };
-    PostCommentDto: {
-      /** Format: int64 */
-      id: number;
-      /** Format: date-time */
-      createDate: string;
-      /** Format: date-time */
-      modifyDate: string;
-      /** Format: int64 */
-      authorId: number;
-      authorName: string;
-      authorProfileImgUrl: string;
-      body: string;
-      actorCanEdit?: boolean;
-      actorCanDelete?: boolean;
     };
     RsDataGetPostCommentsResponseBody: {
       resultCode: string;
@@ -358,6 +374,53 @@ export interface operations {
       };
     };
   };
+  getPosts_1: {
+    parameters: {
+      path: {
+        postId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataGetPostCommentsResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  write: {
+    parameters: {
+      path: {
+        postId: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["WriteRequestBody"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": components["schemas"]["RsDataWriteResponseBody"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        content: {
+          "*/*": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
   logout: {
     responses: {
       /** @description OK */
@@ -401,27 +464,6 @@ export interface operations {
       200: {
         content: {
           "*/*": components["schemas"]["RsDataGetPostsResponseBody"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        content: {
-          "*/*": components["schemas"]["RsDataEmpty"];
-        };
-      };
-    };
-  };
-  getPosts_1: {
-    parameters: {
-      path: {
-        postId: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": components["schemas"]["RsDataGetPostCommentsResponseBody"];
         };
       };
       /** @description Internal Server Error */
