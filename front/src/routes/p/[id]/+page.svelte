@@ -5,6 +5,10 @@
   import { prettyDateTime } from '$lib/utils';
   import type { components } from '$lib/types/api/v1/schema';
 
+  let toastUiEditor: any | undefined;
+
+  let writePostCommentEditorVersion = $state(0);
+
   async function loadPost() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
@@ -87,27 +91,29 @@
   async function submitWriteCommentForm(this: HTMLFormElement) {
     const form: HTMLFormElement = this;
 
-    const bodyInput = form.elements.namedItem('body') as HTMLTextAreaElement;
+    toastUiEditor.editor.setMarkdown(toastUiEditor.editor.getMarkdown().trim());
 
-    if (bodyInput.value.length === 0) {
+    if (toastUiEditor.editor.getMarkdown().trim().length === 0) {
       rq.msgError('내용을 입력해주세요.');
-      bodyInput.focus();
+      toastUiEditor.editor.focus();
       return;
     }
 
     const { data, error } = await rq.apiEndPoints().POST('/api/v1/postComments/{postId}', {
       params: { path: { postId: parseInt($page.params.id) } },
       body: {
-        body: bodyInput.value
+        body: toastUiEditor.editor.getMarkdown()
       }
     });
 
-    bodyInput.value = '';
+    toastUiEditor.editor.setMarkdown('');
 
     rq.msgInfo(data!.msg);
 
     // postComments 맨 앞에 넣고 싶어
     postComments.unshift(data!.data.item);
+
+    writePostCommentEditorVersion++;
   }
 </script>
 
@@ -147,7 +153,9 @@
   <form on:submit|preventDefault={submitWriteCommentForm}>
     <div>
       <div>내용</div>
-      <textarea name="body"></textarea>
+      {#key writePostCommentEditorVersion}
+        <ToastUiEditor bind:this={toastUiEditor} body={''} />
+      {/key}
     </div>
 
     <div>
