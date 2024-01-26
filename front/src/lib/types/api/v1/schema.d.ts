@@ -226,7 +226,18 @@ export interface components {
       success: boolean;
     };
     GetPostsResponseBody: {
-      items: components["schemas"]["PostDto"][];
+      itemPage: components["schemas"]["PageDtoPostDto"];
+    };
+    PageDtoPostDto: {
+      /** Format: int64 */
+      totalElementsCount: number;
+      /** Format: int64 */
+      pageElementsCount: number;
+      /** Format: int64 */
+      totalPagesCount: number;
+      /** Format: int32 */
+      number: number;
+      content: components["schemas"]["PostDto"][];
     };
     RsDataGetPostsResponseBody: {
       resultCode: string;
@@ -523,6 +534,13 @@ export interface operations {
   };
   /** 글 다건조회 */
   getPosts: {
+    parameters: {
+      query?: {
+        page?: number;
+        kw?: string;
+        kwType?: "ALL" | "TITLE" | "BODY" | "NAME";
+      };
+    };
     responses: {
       /** @description OK */
       200: {
