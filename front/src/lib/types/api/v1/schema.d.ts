@@ -13,6 +13,10 @@ export interface paths {
     /** 글 삭제 */
     delete: operations["delete"];
   };
+  "/api/v1/posts/{id}/body": {
+    /** 글 본문 편집 */
+    put: operations["editBody"];
+  };
   "/api/v1/postComments/{postId}/{postCommentId}": {
     /** 댓글 수정 */
     put: operations["edit_1"];
@@ -109,6 +113,9 @@ export interface components {
       data: components["schemas"]["EditResponseBody"];
       fail: boolean;
       success: boolean;
+    };
+    EditBodyRequestBody: {
+      body: string;
     };
     EditCommentRequestBody: {
       body: string;
@@ -364,6 +371,33 @@ export interface operations {
     parameters: {
       path: {
         id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 글 본문 편집 */
+  editBody: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EditBodyRequestBody"];
       };
     };
     responses: {
