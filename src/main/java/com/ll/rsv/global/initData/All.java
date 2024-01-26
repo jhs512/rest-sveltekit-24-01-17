@@ -1,5 +1,6 @@
 package com.ll.rsv.global.initData;
 
+import com.ll.rsv.domain.member.member.entity.Member;
 import com.ll.rsv.domain.member.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +21,11 @@ public class All {
         return args -> {
             if (memberService.findByUsername("system").isPresent()) return;
 
-            memberService.join("system", "1234");
-            memberService.join("admin", "1234");
+            Member memberSystem = memberService.join("system", "1234").getData();
+            memberSystem.setRefreshToken("system");
+
+            Member memberAdmin = memberService.join("admin", "1234").getData();
+            memberSystem.setRefreshToken("admin");
         };
     }
 }
