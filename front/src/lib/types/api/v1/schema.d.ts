@@ -14,6 +14,8 @@ export interface paths {
     delete: operations["delete"];
   };
   "/api/v1/posts/{id}/body": {
+    /** 글(본문) 단건조회 */
+    get: operations["getPostBody"];
     /** 글 본문 편집 */
     put: operations["editBody"];
   };
@@ -267,6 +269,20 @@ export interface components {
       fail: boolean;
       success: boolean;
     };
+    GetPostBodyResponseBody: {
+      /** Format: date-time */
+      modifyDate: string;
+      body: string;
+    };
+    RsDataGetPostBodyResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetPostBodyResponseBody"];
+      fail: boolean;
+      success: boolean;
+    };
     GetPostCommentsResponseBody: {
       items: components["schemas"]["PostCommentDto"][];
     };
@@ -378,6 +394,31 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 글(본문) 단건조회 */
+  getPostBody: {
+    parameters: {
+      query: {
+        lastModifyDate: string;
+      };
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetPostBodyResponseBody"];
         };
       };
       /** @description Bad Request */

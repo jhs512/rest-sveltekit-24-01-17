@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
-  import hotkeys from 'hotkeys-js';
 
   import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
 
@@ -23,8 +22,8 @@
       date: new Date().toISOString()
     });
 
-    // 배열의 크기가 10을 초과하면 가장 오래된 항목(첫 번째 항목)을 제거합니다.
-    if (posts.length > 10) {
+    // 배열의 크기가 50을 초과하면 가장 오래된 항목(첫 번째 항목)을 제거합니다.
+    if (posts.length > 50) {
       posts.shift(); // 배열의 첫 번째 항목을 제거합니다.
     }
 
@@ -49,32 +48,9 @@
     saveToLocalStorage(parseInt($page.params.id), newBody);
 
     if (data) {
-      rq.msgInfo(data.msg);
+      rq.msgInfo('본문이 저장되었습니다.');
     }
   }
-
-  rq.effect(() => {
-    hotkeys.filter = function (event) {
-      return true;
-    };
-
-    hotkeys('ctrl+s,cmd+s', 'postEdit', function (event, handler) {
-      Post__saveBody();
-
-      event.preventDefault();
-    });
-
-    hotkeys('ctrl+q,cmd+q', 'postEdit', function (event, handler) {
-      toastUiEditor.switchTab();
-      event.preventDefault();
-    });
-
-    hotkeys.setScope('postEdit');
-
-    return () => {
-      hotkeys.deleteScope('postEdit');
-    };
-  });
 
   async function load() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -115,6 +91,10 @@
         published: form.published.checked
       }
     });
+
+    if (oldBody !== toastUiEditor.editor.getMarkdown().trim()) {
+      saveToLocalStorage(parseInt($page.params.id), toastUiEditor.editor.getMarkdown().trim());
+    }
 
     rq.msgAndRedirect(data, error, '/p/' + $page.params.id);
   }

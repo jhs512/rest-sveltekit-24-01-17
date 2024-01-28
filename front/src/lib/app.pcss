@@ -17,3 +17,16 @@
 html > body {
   font-family: var(--global-font-family);
 }
+
+/* 토스트 UI 에디터에 폰트 적용 */
+html > body .ProseMirror,
+html > body .toastui-editor-contents,
+html > body .toastui-editor-defaultUI {
+  font-family: var(--base-font-family);
+  font-size: 1rem;
+}
+
+/* 토스틀 */
+html > body #toast-container .toast {
+  white-space: normal;
+}
