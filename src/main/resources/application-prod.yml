@@ -7,10 +7,10 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
   datasource:
-    url: jdbc:h2:mem:db_prod;MODE=PostgreSQL
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://jhs512-slog-db.internal:5432/slog_prod
+    username: postgres
+    password: EcsuevEptKyi9cc
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
