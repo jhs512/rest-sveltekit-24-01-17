@@ -74,8 +74,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["Empty"];
-      success: boolean;
-      fail: boolean;
     };
     EditRequestBody: {
       title: string;
@@ -113,8 +111,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["EditResponseBody"];
-      success: boolean;
-      fail: boolean;
     };
     EditBodyRequestBody: {
       body: string;
@@ -147,8 +143,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["EditCommentResponseBody"];
-      success: boolean;
-      fail: boolean;
     };
     LikeResponseBody: {
       item: components["schemas"]["PostDto"];
@@ -180,8 +174,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["LikeResponseBody"];
-      success: boolean;
-      fail: boolean;
     };
     MakeTempResponseBody: {
       item: components["schemas"]["PostDto"];
@@ -192,8 +184,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MakeTempResponseBody"];
-      success: boolean;
-      fail: boolean;
     };
     RsDataWriteCommentResponseBody: {
       resultCode: string;
@@ -201,8 +191,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["WriteCommentResponseBody"];
-      success: boolean;
-      fail: boolean;
     };
     WriteCommentResponseBody: {
       item: components["schemas"]["PostCommentDto"];
@@ -231,8 +219,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["LoginResponseBody"];
-      success: boolean;
-      fail: boolean;
     };
     GetPostsResponseBody: {
       itemPage: components["schemas"]["PageDtoPostDto"];
@@ -254,8 +240,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostsResponseBody"];
-      success: boolean;
-      fail: boolean;
     };
     GetPostResponseBody: {
       item: components["schemas"]["PostWithBodyDto"];
@@ -266,8 +250,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostResponseBody"];
-      success: boolean;
-      fail: boolean;
     };
     GetPostBodyResponseBody: {
       /** Format: date-time */
@@ -280,8 +262,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostBodyResponseBody"];
-      success: boolean;
-      fail: boolean;
     };
     GetPostCommentsResponseBody: {
       items: components["schemas"]["PostCommentDto"][];
@@ -292,8 +272,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostCommentsResponseBody"];
-      success: boolean;
-      fail: boolean;
     };
     MeResponseBody: {
       item: components["schemas"]["MemberDto"];
@@ -304,8 +282,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["MeResponseBody"];
-      success: boolean;
-      fail: boolean;
     };
     CancelLikeResponseBody: {
       item: components["schemas"]["PostDto"];
@@ -316,8 +292,6 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["CancelLikeResponseBody"];
-      success: boolean;
-      fail: boolean;
     };
   };
   responses: never;
