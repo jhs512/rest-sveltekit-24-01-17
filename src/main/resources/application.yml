@@ -61,6 +61,15 @@ custom:
     cookieDomain: www.slog.gg
     frontUrl: "https://${custom.prod.cookieDomain}"
     backUrl: "https://api.${custom.prod.cookieDomain}"
+    database:
+      password: NEED_TO_SECRET
+    members:
+      system:
+        password: NEED_TO_SECRET
+      admin:
+        password: NEED_TO_SECRET
+      garage:
+        password: NEED_TO_SECRET
   site:
     cookieDomain: "${custom.dev.cookieDomain}"
     frontUrl: "${custom.dev.frontUrl}"

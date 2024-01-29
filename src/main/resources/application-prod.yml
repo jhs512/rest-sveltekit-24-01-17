@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:postgresql://jhs512-slog-db.internal:5432/slog_prod
     username: postgres
-    password: EcsuevEptKyi9cc
+    password: ${custom.prod.database.password}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
