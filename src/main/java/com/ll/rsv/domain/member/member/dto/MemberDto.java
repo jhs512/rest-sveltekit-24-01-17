@@ -25,6 +25,8 @@ public class MemberDto {
     private String profileImgUrl;
     @NonNull
     private List<String> authorities;
+    @NonNull
+    private boolean social;
 
     public MemberDto(Member member) {
         this.id = member.getId();
@@ -33,5 +35,6 @@ public class MemberDto {
         this.name = member.getName();
         this.profileImgUrl = member.getProfileImgUrlOrDefault();
         this.authorities = member.getAuthoritiesAsStringList();
+        this.social = member.isSocial();
     }
 }

@@ -93,6 +93,7 @@ class Rq {
     let createDate = $state('');
     let modifyDate = $state('');
     let authorities: string[] = $state([]);
+    let social = $state(false);
 
     return {
       get id() {
@@ -130,6 +131,12 @@ class Rq {
       },
       set authorities(value: string[]) {
         authorities = value;
+      },
+      get social() {
+        return social;
+      },
+      set social(value: boolean) {
+        this.social = value;
       }
     };
   }

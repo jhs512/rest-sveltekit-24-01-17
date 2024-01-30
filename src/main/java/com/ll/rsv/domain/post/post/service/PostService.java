@@ -160,27 +160,6 @@ public class PostService {
         post.deleteLike(actor);
     }
 
-    public void loadLikeMap(List<Post> posts, Member member) {
-        List<PostLike> likes = findLikesByPostInAndMember(posts, member);
-
-        Map<Long, Boolean> likeMap_ = likes
-                .stream()
-                .collect(
-                        HashMap::new,
-                        (map, like) -> map.put(like.getPost().getId(), true),
-                        HashMap::putAll
-                );
-
-        Map<Long, Boolean> likeMap = posts
-                .stream()
-                .collect(
-                        HashMap::new,
-                        (map, post) -> map.put(post.getId(), likeMap_.getOrDefault(post.getId(), false)),
-                        HashMap::putAll
-                );
-
-        transactionCache.put("likeMap", likeMap);
-    }
 
     private List<PostLike> findLikesByPostInAndMember(List<Post> posts, Member member) {
         return postLikeRepository.findByIdPostInAndIdMember(posts, member);
@@ -212,5 +191,27 @@ public class PostService {
     @Transactional
     public void editBody(Post post, String body) {
         saveBody(post, body);
+    }
+
+    public void loadLikeMap(List<Post> posts, Member member) {
+        List<PostLike> likes = findLikesByPostInAndMember(posts, member);
+
+        Map<Long, Boolean> likeMap_ = likes
+                .stream()
+                .collect(
+                        HashMap::new,
+                        (map, like) -> map.put(like.getPost().getId(), true),
+                        HashMap::putAll
+                );
+
+        Map<Long, Boolean> likeMap = posts
+                .stream()
+                .collect(
+                        HashMap::new,
+                        (map, post) -> map.put(post.getId(), likeMap_.getOrDefault(post.getId(), false)),
+                        HashMap::putAll
+                );
+
+        transactionCache.put("likeMap", likeMap);
     }
 }

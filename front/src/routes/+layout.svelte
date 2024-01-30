@@ -37,9 +37,24 @@
         class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
       >
         <li><a href="/p/list"><i class="fa-solid fa-list"></i> 글</a></li>
+        {#if rq.isLogin()}
+          <li><a href="/p/mine"><i class="fa-solid fa-list-check"></i> 내글</a></li>
+          <li>
+            <button onclick={() => rq.goToTempPostEditPage()}>
+              <i class="fa-solid fa-pen"></i> 글 쓰기
+            </button>
+          </li>
+          <li>
+            <a href="/ken/migrate">
+              <i class="fa-solid fa-cloud-arrow-down"></i> 기존 글 가져오기
+            </a>
+          </li>
+        {/if}
+
         {#if rq.isAdmPage($page)}
           <li><a href="/"><i class="fa-solid fa-house"></i> 홈</a></li>
         {/if}
+
         {#if rq.isUsrPage($page) && rq.isAdmin()}
           <li><a href="/adm"><i class="fa-solid fa-gauge"></i> 관리자</a></li>
         {/if}
@@ -94,11 +109,6 @@
         {#if rq.isLogin()}
           <li>
             <a href="/member/me"><i class="fa-solid fa-user"></i> {rq.member.name}</a>
-          </li>
-          <li>
-            <button onclick={() => rq.goToTempPostEditPage()}>
-              <i class="fa-solid fa-pen"></i> 글 쓰기
-            </button>
           </li>
           <li>
             <button on:click={() => rq.logoutAndRedirect('/')}

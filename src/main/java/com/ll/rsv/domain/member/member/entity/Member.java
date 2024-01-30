@@ -53,12 +53,10 @@ public class Member extends BaseTime {
         return authorities;
     }
 
-    @Transient
     public String getName() {
         return nickname;
     }
 
-    @Transient
     public boolean isAdmin() {
         if (this._isAdmin != null)
             return this._isAdmin;
@@ -70,12 +68,15 @@ public class Member extends BaseTime {
 
     // List.of("system", "admin").contains(getUsername()); 이걸할 때 findById 가 실행될 수 도 있는데
     // 이 함수를 통해서 _isAdmin 필드의 값을 강제로 정하면서, 적어도 isAdmin() 함수 때문에 findById 가 실행되지 않도록 한다.
-    @Transient
     public void setAdmin(boolean admin) {
         this._isAdmin = admin;
     }
 
     public String getProfileImgUrlOrDefault() {
         return Ut.str.hasLength(profileImgUrl) ? profileImgUrl : "https://placehold.co/640x640?text=O_O";
+    }
+
+    public boolean isSocial() {
+        return getUsername().startsWith("KAKAO__");
     }
 }

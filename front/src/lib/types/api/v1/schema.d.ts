@@ -25,6 +25,10 @@ export interface paths {
     /** 댓글 삭제 */
     delete: operations["delete_1"];
   };
+  "/api/v1/wikenMigrate/migrate": {
+    /** 마이그레이트 */
+    post: operations["migrate"];
+  };
   "/api/v1/posts/{id}/like": {
     /** 글 추천 */
     post: operations["like"];
@@ -48,6 +52,10 @@ export interface paths {
   "/api/v1/posts": {
     /** 글 다건조회 */
     get: operations["getPosts"];
+  };
+  "/api/v1/posts/mine": {
+    /** 내글 다건조회 */
+    get: operations["getMine"];
   };
   "/api/v1/postComments/{postId}": {
     /** 댓글 다건조회 */
@@ -144,6 +152,10 @@ export interface components {
       msg: string;
       data: components["schemas"]["EditCommentResponseBody"];
     };
+    MigrateRequestBody: {
+      username?: string;
+      password?: string;
+    };
     LikeResponseBody: {
       item: components["schemas"]["PostDto"];
     };
@@ -212,6 +224,7 @@ export interface components {
       name: string;
       profileImgUrl: string;
       authorities: string[];
+      social: boolean;
     };
     RsDataLoginResponseBody: {
       resultCode: string;
@@ -262,6 +275,16 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostBodyResponseBody"];
+    };
+    GetMineResponseBody: {
+      itemPage: components["schemas"]["PageDtoPostDto"];
+    };
+    RsDataGetMineResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetMineResponseBody"];
     };
     GetPostCommentsResponseBody: {
       items: components["schemas"]["PostCommentDto"][];
@@ -481,6 +504,28 @@ export interface operations {
       };
     };
   };
+  /** 마이그레이트 */
+  migrate: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["MigrateRequestBody"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
   /** 글 추천 */
   like: {
     parameters: {
@@ -595,6 +640,30 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetPostsResponseBody"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 내글 다건조회 */
+  getMine: {
+    parameters: {
+      query?: {
+        page?: number;
+        kw?: string;
+        kwType?: "ALL" | "TITLE" | "BODY" | "NAME";
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetMineResponseBody"];
         };
       };
       /** @description Bad Request */

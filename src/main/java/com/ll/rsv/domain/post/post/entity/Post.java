@@ -45,6 +45,8 @@ public class Post extends BaseTime {
     @ToString.Exclude
     private PostDetail detailBody;
     private boolean published;
+    private String addi1;
+    private String addi2;
 
     public void increaseLikesCount() {
         likesCount++;
