@@ -13,7 +13,7 @@
   });
 </script>
 
-<header class="navbar bg-base-100 shadow sticky top-0">
+<header class="navbar bg-base-100 shadow sticky top-0 z-10">
   <div class="flex-none">
     <div class="dropdown">
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle">

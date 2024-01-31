@@ -32,112 +32,219 @@
   }
 </script>
 
-{#await load()}
-  <p>loading...</p>
-{:then { data: { itemPage } }}
-  <h1>검색</h1>
-
-  <form action="/p/list" class="bg-base rounded flex flex-col gap-6">
-    <div class="form-control">
-      <!-- svelte-ignore a11y-label-has-associated-control -->
-      <label class="label">
-        <span class="label-text">검색필터</span>
-      </label>
-
-      <select
-        name="kwType"
-        class="select select-bordered"
-        value={$page.url.searchParams.get('kwType') ?? 'ALL'}
-      >
-        <option value="ALL">전체</option>
-        <option value="TITLE">제목</option>
-        <option value="BODY">내용</option>
-        <option value="NAME">작성자</option>
-      </select>
+<div class="flex-grow flex justify-center items-center">
+  <div class="w-full max-w-screen-2xl px-2 mt-4">
+    <div class="text-center">
+      <div class="font-bold text-lg">내 글</div>
+      <div class="mt-3 text-gray-400">본인이 작성한 글을 보여줍니다.</div>
     </div>
 
-    <div class="form-control">
-      <!-- svelte-ignore a11y-label-has-associated-control -->
-      <label class="label">
-        <span class="label-text">검색어</span>
-      </label>
+    <div class="divider"></div>
 
-      <input
-        placeholder="검색어"
-        class="input input-bordered"
-        name="kw"
-        type="search"
-        value={$page.url.searchParams.get('kw') ?? ''}
-        autocomplete="off"
-      />
-    </div>
-
-    <div>
-      <button class="btn btn-block btn-primary gap-1">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <span>검색</span>
-      </button>
-    </div>
-  </form>
-
-  <h1>내글 리스트</h1>
-
-  <div>
-    <div>전체 페이지 아이템 : {itemPage.totalElementsCount}</div>
-    <div>현재 페이지 아이템 : {itemPage.pageElementsCount}</div>
-  </div>
-
-  <Pagination page={itemPage} />
-
-  <ul class="grid grid-cols-1 gap-3">
-    {#each posts as post}
-      <li>
-        <div class="flex items-center gap-2">
-          <a href="/p/{post.id}">{post.id}. {post.title}</a>
-          <span>추천 : {post.likesCount}</span>
-          <span>작성일 : {prettyDateTime(post.createDate)}</span>
-
-          {#if post.actorCanDelete}
-            <button
-              onclick={() =>
-                rq.confirmAndDeletePost(post, () => {
-                  posts.splice(posts.indexOf(post), 1);
-                })}>삭제</button
-            >
-          {/if}
-
-          {#if post.actorCanEdit}
-            <a href="/p/{post.id}/edit">수정</a>
-          {/if}
-
-          {#if post.actorCanLike}
-            <button
-              onclick={() =>
-                rq.like(post, (data) => {
-                  Object.assign(post, data.data.item);
-                  rq.msgInfo(data.msg);
-                })}>추천하기</button
-            >
-          {/if}
-
-          {#if post.actorCanCancelLike}
-            <button
-              onclick={() =>
-                rq.cancelLike(post, (data) => {
-                  Object.assign(post, data.data.item);
-                  rq.msgInfo(data.msg);
-                })}>추천취소</button
-            >
-          {/if}
-
-          <span class="flex-1"></span>
-
-          <span>작성자 : {post.authorName}</span>
-          <img src={post.authorProfileImgUrl} width="50" class="rounded-full" alt="" />
+    {#await load()}
+      <p>loading...</p>
+    {:then { data: { itemPage } }}
+      <div class="flex flex-wrap gap-2 items-center mt-4">
+        <div class="badge badge-outline">
+          검색결과 : {itemPage.totalElementsCount}건
         </div>
-      </li>
-    {/each}
-  </ul>
 
-  <Pagination page={itemPage} />
-{/await}
+        <div class="flex-grow"></div>
+
+        <div class="flex gap-2">
+          <button
+            class="btn btn-primary"
+            onclick={() => {
+        const modal = document.querySelector('#search_modal_1') as HTMLDialogElement;
+        modal.showModal();
+
+        const inputKw = modal.querySelector('input[name="kw"]') as HTMLInputElement;
+        inputKw.focus();
+      }}
+          >
+            <i class="fa-solid fa-magnifying-glass"></i> 검색
+            {#if $page.url.searchParams.get('kw')}
+              <span class="text-sm text-gray-400"
+                >(검색어 : {$page.url.searchParams.get('kw')})</span
+              >
+            {/if}
+          </button>
+
+          {#if $page.url.searchParams.get('kw')}
+            <a class="btn" href={$page.url.pathname}>
+              <i class="fa-solid fa-xmark"></i> 검색어 지우기
+            </a>
+          {/if}
+        </div>
+      </div>
+
+      <dialog id="search_modal_1" class="modal">
+        <div class="modal-box">
+          <h3 class="font-bold text-lg">검색</h3>
+          <form
+            action={$page.url.pathname}
+            class="bg-base rounded grid grid-cols-1 gap-4"
+            onsubmit={() => {
+          const modal = document.querySelector('#search_modal_1') as HTMLDialogElement;
+          modal.close();
+        }}
+          >
+            <div class="form-control">
+              <!-- svelte-ignore a11y-label-has-associated-control -->
+              <label class="label">
+                <span class="label-text">검색필터</span>
+              </label>
+
+              <select
+                name="kwType"
+                class="select select-bordered"
+                value={$page.url.searchParams.get('kwType') ?? 'ALL'}
+              >
+                <option value="ALL">전체</option>
+                <option value="TITLE">제목</option>
+                <option value="BODY">내용</option>
+                <option value="NAME">작성자</option>
+              </select>
+            </div>
+
+            <div class="form-control">
+              <!-- svelte-ignore a11y-label-has-associated-control -->
+              <label class="label">
+                <span class="label-text">검색어</span>
+              </label>
+
+              <input
+                placeholder="검색어"
+                class="input input-bordered"
+                name="kw"
+                type="search"
+                value={$page.url.searchParams.get('kw') ?? ''}
+                autocomplete="off"
+              />
+            </div>
+
+            <div>
+              <button class="btn btn-block btn-primary gap-1">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>검색</span>
+              </button>
+            </div>
+          </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+
+      <div class="mt-4">
+        <Pagination page={itemPage} />
+      </div>
+
+      <ul class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {#each posts as post}
+          <li>
+            <div class="card bg-base-100 shadow">
+              <div class="card-body">
+                <div class="detail grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-5">
+                  <a
+                    href="/p/{post.id}"
+                    class="col-span-full bg-gray-700 rounded p-3 text-gray-100 flex items-center justify-center flex-wrap aspect-video"
+                  >
+                    <div class="flex flex-wrap gap-1">
+                      <div class="flex gap-1">
+                        <span>🗒️</span>
+                        <span>{post.title}</span>
+                      </div>
+                      <div class="flex-grow text-right text-gray-300 italic">
+                        <span>by</span>
+                        <span>{post.authorName}</span>
+                      </div>
+                    </div>
+                  </a>
+
+                  <div class="form-control">
+                    <!-- svelte-ignore a11y-label-has-associated-control -->
+                    <label class="label">
+                      <span class="label-text">번호</span>
+                    </label>
+                    <div>{post.id}</div>
+                  </div>
+
+                  <div class="form-control">
+                    <!-- svelte-ignore a11y-label-has-associated-control -->
+                    <label class="label">
+                      <span class="label-text">작성일</span>
+                    </label>
+                    <div>{prettyDateTime(post.createDate)}</div>
+                  </div>
+
+                  <div class="form-control">
+                    <!-- svelte-ignore a11y-label-has-associated-control -->
+                    <label class="label">
+                      <span class="label-text">공개</span>
+                    </label>
+                    <div>
+                      {#if post.published}
+                        <i class="fa-regular fa-eye"></i>
+                      {:else}
+                        <i class="fa-regular fa-eye-slash"></i>
+                      {/if}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-actions justify-end mt-5">
+                  {#if post.actorCanDelete}
+                    <button
+                      class="btn btn-outline"
+                      onclick={() =>
+                        rq.confirmAndDeletePost(post, () => {
+                          posts.splice(posts.indexOf(post), 1);
+                        })}><i class="fa-solid fa-trash"></i> 삭제</button
+                    >
+                  {/if}
+
+                  {#if post.actorCanEdit}
+                    <a class="btn btn-outline" href="/p/{post.id}/edit"
+                      ><i class="fa-solid fa-pen-to-square"></i> 수정</a
+                    >
+                  {/if}
+
+                  {#if post.actorCanLike}
+                    <button
+                      class="btn btn-outline"
+                      onclick={() =>
+                        rq.like(post, (data) => {
+                          Object.assign(post, data.data.item);
+                          rq.msgInfo(data.msg);
+                        })}><i class="fa-regular fa-heart"></i></button
+                    >
+                  {/if}
+
+                  {#if post.actorCanCancelLike}
+                    <button
+                      class="btn btn-outline"
+                      onclick={() =>
+                        rq.cancelLike(post, (data) => {
+                          Object.assign(post, data.data.item);
+                          rq.msgInfo(data.msg);
+                        })}><i class="fa-solid fa-heart text-red-400"></i></button
+                    >
+                  {/if}
+
+                  <a href="/p/{post.id}" class="btn btn-primary"
+                    ><i class="fa-solid fa-book-open-reader"></i> 글 보기</a
+                  >
+                </div>
+              </div>
+            </div>
+          </li>
+        {/each}
+      </ul>
+
+      <div class="mt-4 mb-4">
+        <Pagination page={itemPage} />
+      </div>
+    {/await}
+  </div>
+</div>
