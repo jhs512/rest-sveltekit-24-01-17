@@ -4,7 +4,7 @@
 </script>
 
 <div class="flex-grow flex justify-center items-center">
-  <div class="max-w-sm">
+  <div class="w-full max-w-sm">
     <div class="text-center">
       <div class="font-bold text-lg">내 정보</div>
       <div class="mt-3 text-gray-400">현재 로그인한 회원의 정보입니다.</div>
