@@ -136,7 +136,7 @@ class Rq {
         return social;
       },
       set social(value: boolean) {
-        this.social = value;
+        social = value;
       }
     };
   }
