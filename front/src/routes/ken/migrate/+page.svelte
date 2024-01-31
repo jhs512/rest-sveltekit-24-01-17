@@ -21,30 +21,50 @@
   }
 </script>
 
-<form on:submit|preventDefault={submitLoginForm}>
-  <div>기존에 아이디/비번을 사용하셨던 분은 아래의 입력상자에 정보를 넣어주세요.</div>
-  <div>
-    <div>기존 아이디</div>
-    <input
-      type="text"
-      name="username"
-      class="input input-bordered"
-      placeholder="기존 아이디(필수 아님)"
-    />
-  </div>
+<div class="flex-grow flex justify-center items-center">
+  <div class="max-w-sm">
+    <div class="text-center">
+      <div class="font-bold text-lg">기존 글 복구</div>
+      <div class="mt-3 text-gray-400">
+        만약에 기존에 카카오 로그인을 사용하셨다면, 기존 아이디와 기존 비밀번호를 입력하지 않아도
+        됩니다.
+      </div>
+    </div>
 
-  <div>
-    <div>기존 비밀번호</div>
-    <input
-      type="password"
-      name="password"
-      class="input input-bordered"
-      placeholder=" 기존비밀번호(필수 아님)"
-    />
-  </div>
+    <div class="divider"></div>
 
-  <div>
-    <div>마이그레이트</div>
-    <button type="submit" class="btn btn-primary">마이그레이트</button>
+    <form on:submit|preventDefault={submitLoginForm} class="grid grid-cols-1 gap-4">
+      <div>
+        <div>기존 아이디</div>
+        <div class="mt-2">
+          <input
+            type="text"
+            name="username"
+            class="input input-bordered w-full"
+            placeholder="(선택입력)기존 아이디"
+          />
+        </div>
+      </div>
+
+      <div>
+        <div>기존 비밀번호</div>
+        <div class="mt-2">
+          <input
+            type="password"
+            name="password"
+            class="input input-bordered w-full"
+            placeholder="(선택입력)기존 비밀번호"
+          />
+        </div>
+        <div class="mt-2 text-gray-400 text-sm">
+          기존 사이트에서 사용하시던 아이디와 비밀번호를 입력해주세요. 만약에 카카오 로그인을
+          사용하셨다면, 입력하지 않으셔도 됩니다.
+        </div>
+      </div>
+
+      <div>
+        <button type="submit" class="btn btn-primary w-full">마이그레이트</button>
+      </div>
+    </form>
   </div>
-</form>
+</div>

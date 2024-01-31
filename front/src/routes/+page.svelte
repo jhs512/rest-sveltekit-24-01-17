@@ -1,5 +1,5 @@
 <div class="flex-grow flex justify-center items-center">
-  <div>
+  <div class="max-w-sm">
     <div class="text-center">
       <div class="font-bold text-lg">SLOG, 개발자를 위한 블로그</div>
       <div class="mt-3 text-gray-400">
