@@ -26,6 +26,8 @@ public abstract class AbsPostDto {
     @NonNull
     private boolean published;
     @NonNull
+    private boolean listed;
+    @NonNull
     private long likesCount;
 
     @Setter
@@ -48,6 +50,7 @@ public abstract class AbsPostDto {
         this.authorProfileImgUrl = post.getAuthor().getProfileImgUrlOrDefault();
         this.title = post.getTitle();
         this.published = post.isPublished();
+        this.listed = post.isListed();
         this.likesCount = post.getLikesCount();
     }
 }

@@ -88,7 +88,8 @@
       body: {
         title: titleInput.value,
         body: toastUiEditor.editor.getMarkdown().trim(),
-        published: form.published.checked
+        published: form.published.checked,
+        listed: form.listed.checked
       }
     });
 
@@ -117,6 +118,11 @@
     <div>
       <div>공개</div>
       <input type="checkbox" name="published" value={true} checked={post.published} />
+    </div>
+
+    <div>
+      <div>글 목록에서 공개</div>
+      <input type="checkbox" name="listed" value={true} checked={post.listed} />
     </div>
 
     <div>

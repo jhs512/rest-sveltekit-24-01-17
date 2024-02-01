@@ -87,6 +87,7 @@ export interface components {
       title: string;
       body: string;
       published: boolean;
+      listed: boolean;
     };
     EditResponseBody: {
       item: components["schemas"]["PostWithBodyDto"];
@@ -104,6 +105,7 @@ export interface components {
       authorProfileImgUrl: string;
       title: string;
       published: boolean;
+      listed: boolean;
       /** Format: int64 */
       likesCount: number;
       actorCanRead?: boolean;
@@ -172,6 +174,7 @@ export interface components {
       authorProfileImgUrl: string;
       title: string;
       published: boolean;
+      listed: boolean;
       /** Format: int64 */
       likesCount: number;
       actorCanRead?: boolean;

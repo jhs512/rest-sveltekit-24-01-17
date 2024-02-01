@@ -45,6 +45,7 @@ public class Post extends BaseTime {
     @ToString.Exclude
     private PostDetail detailBody;
     private boolean published;
+    private boolean listed;
     private String addi1;
     private String addi2;
 
