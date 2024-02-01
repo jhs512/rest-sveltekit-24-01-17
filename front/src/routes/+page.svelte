@@ -1,6 +1,6 @@
 <div class="flex-grow flex justify-center items-center">
-  <div class="w-full max-w-lg">
-    <div class="text-center mt-4">
+  <div class="w-full max-w-lg px-2 py-6">
+    <div class="text-center">
       <div class="font-bold text-lg">SLOG, 개발자를 위한 블로그</div>
       <div class="mt-3 text-gray-400">
         기술관련 글을 작성할 때 편리한 에디터와 뷰어를 제공합니다.
@@ -12,7 +12,7 @@
     <div>
       <div class="font-bold text-lg text-center">공지사항</div>
 
-      <ul class="list-disc my-4 ml-7 mr-2 text-gray-400">
+      <ul class="list-disc mt-4 ml-5 mr-1 text-gray-400">
         <li>
           <span class="text-red-500">Ctrl + D</span>(<span class="text-red-500">Cmd + D</span>)는 글
           본문페이지에서 <span class="text-red-500">본문 풀스크린 모드</span>를 토글합니다.

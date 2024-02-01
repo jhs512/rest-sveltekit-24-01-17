@@ -22,7 +22,7 @@
 </script>
 
 <div class="flex-grow flex justify-center items-center">
-  <div class="w-full max-w-sm px-2">
+  <div class="w-full max-w-sm px-2 py-6">
     <div class="text-center">
       <div class="font-bold text-lg">기존 글 복구</div>
       <div class="mt-3 text-gray-400">
@@ -63,7 +63,9 @@
       </div>
 
       <div>
-        <button type="submit" class="btn btn-primary w-full">마이그레이트</button>
+        <button type="submit" class="btn btn-primary w-full"
+          ><i class="fa-solid fa-cloud-arrow-down"></i> 기존 글 복구
+        </button>
       </div>
     </form>
   </div>

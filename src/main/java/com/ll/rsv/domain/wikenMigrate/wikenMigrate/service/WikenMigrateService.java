@@ -37,6 +37,6 @@ public class WikenMigrateService {
             post.setAuthor(actor);
         });
 
-        return RsData.of("총 %d개의 글을 불러왔습니다.".formatted(posts.size()));
+        return RsData.of("총 %d개의 글이 복구되었습니다.".formatted(posts.size()));
     }
 }
