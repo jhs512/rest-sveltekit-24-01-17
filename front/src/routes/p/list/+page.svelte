@@ -46,7 +46,7 @@
     {:then { data: { itemPage } }}
       <div class="flex flex-wrap gap-2 items-center mt-4">
         <div class="badge badge-outline">
-          검색결과 : {itemPage.totalElementsCount}건
+          검색결과 : {itemPage.totalElementsCount.toLocaleString()}건
         </div>
 
         <div class="flex-grow"></div>
