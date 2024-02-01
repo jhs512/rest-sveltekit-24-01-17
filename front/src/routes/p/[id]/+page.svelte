@@ -165,10 +165,22 @@
     postComments.unshift(data!.data.item);
   }
 
+  function Post__switchTab() {
+    var inactiveTabs = document.querySelectorAll('.toastui-editor-tabs > .tab-item:not(.active)');
+    inactiveTabs.forEach((value: Element) => {
+      (value as HTMLElement).click();
+    });
+  }
+
   rq.effect(() => {
     hotkeys.filter = function (event) {
       return true;
     };
+
+    hotkeys('ctrl+p,cmd+p', 'postDetail', function (event, handler) {
+      Post__switchTab();
+      event.preventDefault();
+    });
 
     hotkeys('ctrl+d,cmd+d', 'postDetail', function (event, handler) {
       toastUiEditor.toggleFullScreen();
@@ -230,6 +242,19 @@
               <div>{post.title}</div>
             </div>
 
+            <div class="flex gap-2">
+              {#if post.actorCanDelete}
+                <button
+                  class="btn btn-outline"
+                  onclick={() => rq.confirmAndDeletePost(post, '/p/list')}>삭제</button
+                >
+              {/if}
+
+              {#if post.actorCanEdit}
+                <a class="btn btn-outline" href="/p/{post.id}/edit">수정</a>
+              {/if}
+            </div>
+
             <div class="form-control col-span-full">
               <label class="label">
                 <span class="label-text">내용</span>
@@ -254,16 +279,6 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <div>
-        {#if post.actorCanDelete}
-          <button onclick={() => rq.confirmAndDeletePost(post, '/p/list')}>삭제</button>
-        {/if}
-
-        {#if post.actorCanEdit}
-          <a href="/p/{post.id}/edit">수정</a>
-        {/if}
       </div>
     {:catch error}
       {error.msg}
@@ -290,7 +305,7 @@
           </div>
 
           <div>
-            <button type="submit">작성</button>
+            <button class="btn btn-outline" type="submit">댓글작성</button>
           </div>
         {/if}
       </form>
@@ -322,6 +337,7 @@
               <div>
                 {#if postComment.actorCanDelete}
                   <button
+                    class="btn btn-outline"
                     onclick={() =>
                       confirmAndDeletePostComment(postComment, (data) => {
                         rq.msgInfo(data.msg);
@@ -331,7 +347,10 @@
                 {/if}
 
                 {#if postComment.actorCanEdit}
-                  <button onclick={() => (postComment.editing = !postComment.editing)}>수정</button>
+                  <button
+                    class="btn btn-outline"
+                    onclick={() => (postComment.editing = !postComment.editing)}>수정</button
+                  >
                 {/if}
               </div>
             {/if}
@@ -353,9 +372,10 @@
                   </div>
 
                   <div>
-                    <button type="submit">수정</button>
+                    <button class="btn btn-outline" type="submit">저장</button>
                     <button
                       type="button"
+                      class="btn btn-outline"
                       onclick={() => (postComment.editing = !postComment.editing)}>수정취소</button
                     >
                   </div>

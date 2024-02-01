@@ -1,8 +1,34 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import rq from '$lib/rq/rq.svelte';
-
+  import hotkeys from 'hotkeys-js';
   import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
+
+  function Post__switchTab() {
+    var inactiveTabs = document.querySelectorAll('.toastui-editor-tabs > .tab-item:not(.active)');
+    inactiveTabs.forEach((value: Element) => {
+      (value as HTMLElement).click();
+    });
+  }
+
+  rq.effect(() => {
+    rq.initAuth();
+
+    hotkeys.filter = function (event) {
+      return true;
+    };
+
+    hotkeys('ctrl+p,cmd+p', 'postEdit', function (event, handler) {
+      Post__switchTab();
+      event.preventDefault();
+    });
+
+    hotkeys.setScope('postEdit');
+
+    return () => {
+      hotkeys.deleteScope('postEdit');
+    };
+  });
 
   let toastUiEditor: any | undefined;
   let oldBody: string = '';
@@ -138,8 +164,8 @@
     </div>
 
     <div>
-      <div>저장</div>
-      <button type="submit">저장</button>
+      <button class="btn" type="button" onclick={() => history.back()}>취소</button>
+      <button class="btn btn-primary" type="submit">저장</button>
     </div>
   </form>
 {:catch error}

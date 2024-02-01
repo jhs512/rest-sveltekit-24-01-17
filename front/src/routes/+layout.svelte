@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
+  import hotkeys from 'hotkeys-js';
 
   import '$lib/app.pcss';
 
