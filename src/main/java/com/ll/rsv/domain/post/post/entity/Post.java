@@ -3,6 +3,7 @@ package com.ll.rsv.domain.post.post.entity;
 import com.ll.rsv.domain.member.member.entity.Member;
 import com.ll.rsv.domain.post.postComment.entity.PostComment;
 import com.ll.rsv.domain.post.postLike.entity.PostLike;
+import com.ll.rsv.domain.post.postTag.entity.PostTag;
 import com.ll.rsv.global.jpa.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,6 +27,11 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "id.post", cascade = ALL, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default
+    private List<PostTag> tags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "id.post", cascade = ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @Builder.Default
     private List<PostLike> likes = new ArrayList<>();
     @Column(columnDefinition = "BIGINT default 0")
     @Setter(PROTECTED)
@@ -42,16 +48,21 @@ public class Post extends BaseTime {
 
     @ManyToOne(fetch = LAZY)
     private Member author;
+
     private String title;
+
     @OneToOne(fetch = LAZY, cascade = ALL)
     @ToString.Exclude
     private PostDetail detailBody;
+
     @Column(columnDefinition = "BOOLEAN default false")
     private boolean published;
     @Column(columnDefinition = "BOOLEAN default false")
     private boolean listed;
-    private String addi1;
-    private String addi2;
+
+    private String addi1; // 마이그레이션을 위한 임시 칼럼, 추후에 삭제될 예정
+    private String addi2; // 마이그레이션을 위한 임시 칼럼, 추후에 삭제될 예정
+
 
     public void increaseLikesCount() {
         likesCount++;
@@ -71,24 +82,19 @@ public class Post extends BaseTime {
     }
 
     public void deleteLike(Member member) {
-        likes.remove(
-                PostLike.builder()
-                        .post(this)
-                        .member(member)
-                        .build()
+        likes.removeIf(
+                it -> it.getMember().equals(member)
         );
 
         decreaseLikesCount();
     }
 
     public boolean hasLike(Member actor) {
-        return likes.contains(
-                PostLike.builder()
-                        .post(this)
-                        .member(actor)
-                        .build()
-        );
+        return likes
+                .stream()
+                .anyMatch(it -> it.getMember().equals(actor));
     }
+
 
     public void increaseCommentsCount() {
         commentsCount++;
@@ -128,6 +134,27 @@ public class Post extends BaseTime {
                 .filter(it -> it.getId().equals(postCommentId))
                 .findFirst();
     }
+
+
+    public void addTag(String content) {
+        tags.add(
+                PostTag.builder()
+                        .post(this)
+                        .content(content)
+                        .build()
+        );
+    }
+
+    public void deleteTag(String content) {
+        tags.removeIf(it -> it.getContent().equals(content));
+    }
+
+    public boolean hasTag(String content) {
+        return tags
+                .stream()
+                .anyMatch(it -> it.getContent().equals(content));
+    }
+
 
     public void setModified() {
         setModifyDate(LocalDateTime.now());

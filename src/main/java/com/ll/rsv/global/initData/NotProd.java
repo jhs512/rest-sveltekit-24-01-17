@@ -63,6 +63,10 @@ public class NotProd {
                 post1.addComment(memberUser3, "댓글 9");
                 post1.addComment(memberUser4, "댓글 10");
 
+                post1.addTag("자바");
+                post1.addTag("스프링");
+                post1.addTag("스프링부트");
+
                 Post post2 = postService.write(memberUser1, "제목 2", "내용 2", true, true);
 
                 post2.addLike(memberUser1);
@@ -80,12 +84,22 @@ public class NotProd {
                 post2.addComment(memberUser2, "댓글 15");
                 post2.addComment(memberUser3, "댓글 16");
 
+                post2.addTag("DB");
+                post2.addTag("JPA");
+
                 Post post3 = postService.write(memberUser1, "제목 3", "내용 3", false, true);
                 post3.addLike(memberUser1);
                 post3.addLike(memberUser2);
 
+                post3.addTag("코틀린");
+                post3.addTag("코프링");
+
                 Post post4 = postService.write(memberUser1, "제목 4", "내용 4", true, true);
                 post4.addLike(memberUser1);
+
+                post4.addTag("코틀린");
+                post4.addTag("코프링");
+                post4.addTag("코프링 JPA");
 
                 Post post5 = postService.write(memberUser2, "제목 5", "내용 5", true, false);
                 Post post6 = postService.write(memberUser2, "제목 6", "내용 6", false, true);
