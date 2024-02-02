@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public abstract class AbsPostDto {
@@ -29,6 +30,8 @@ public abstract class AbsPostDto {
     private boolean listed;
     @NonNull
     private long likesCount;
+    @NonNull
+    private List<String> tagContents;
 
     @Setter
     private Boolean actorCanRead;
@@ -52,5 +55,6 @@ public abstract class AbsPostDto {
         this.published = post.isPublished();
         this.listed = post.isListed();
         this.likesCount = post.getLikesCount();
+        this.tagContents = post.getTagContents();
     }
 }

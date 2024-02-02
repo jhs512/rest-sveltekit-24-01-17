@@ -108,6 +108,7 @@ export interface components {
       listed: boolean;
       /** Format: int64 */
       likesCount: number;
+      tagContents: string[];
       actorCanRead?: boolean;
       actorCanEdit?: boolean;
       actorCanDelete?: boolean;
@@ -177,6 +178,7 @@ export interface components {
       listed: boolean;
       /** Format: int64 */
       likesCount: number;
+      tagContents: string[];
       actorCanRead?: boolean;
       actorCanEdit?: boolean;
       actorCanDelete?: boolean;

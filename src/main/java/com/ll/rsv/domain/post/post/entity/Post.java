@@ -159,4 +159,11 @@ public class Post extends BaseTime {
     public void setModified() {
         setModifyDate(LocalDateTime.now());
     }
+
+    public List<String> getTagContents() {
+        return tags
+                .stream()
+                .map(PostTag::getContent)
+                .toList();
+    }
 }

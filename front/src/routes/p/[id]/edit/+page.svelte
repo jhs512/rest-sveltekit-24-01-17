@@ -127,47 +127,90 @@
   }
 </script>
 
-{#await load()}
-  <div>loading...</div>
-{:then { data: { item: post } }}
-  <form on:submit|preventDefault={submitLoginForm}>
-    <div>
-      <div>번호</div>
-      <div>번호 : {post.id}</div>
+<div class="flex-grow flex justify-center">
+  <div class="w-full max-w-screen-2xl px-2 my-4">
+    <div class="text-center">
+      <div class="font-bold text-lg">글 편집</div>
+      <div class="mt-3 text-gray-400">
+        글의 제목, 내용, 공개 여부, 리스트 여부, 태그를 수정할 수 있습니다. 글 본문만 수정하고
+        싶다면, 에디터의 저장 버튼을 눌러주세요.
+      </div>
     </div>
 
-    <div>
-      <div>추천</div>
-      <div>추천 : {post.likesCount}</div>
-    </div>
+    <div class="divider"></div>
 
-    <div>
-      <div>공개</div>
-      <input type="checkbox" name="published" value={true} checked={post.published} />
-    </div>
+    {#await load()}
+      <div>loading...</div>
+    {:then { data: { item: post } }}
+      <form on:submit|preventDefault={submitLoginForm} class="grid grid-cols-1 gap-4">
+        <!-- svelte-ignore a11y-label-has-associated-control -->
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">번호</span>
+          </div>
+          <div class="badge">{post.id}</div>
+        </label>
 
-    <div>
-      <div>글 목록에서 공개</div>
-      <input type="checkbox" name="listed" value={true} checked={post.listed} />
-    </div>
+        <!-- svelte-ignore a11y-label-has-associated-control -->
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">추천</span>
+          </div>
+          <div class="badge">{post.likesCount.toLocaleString()}</div>
+        </label>
 
-    <div>
-      <div>제목</div>
-      <input type="text" name="title" value={post.title} />
-    </div>
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">공개</span>
+          </div>
+          <input
+            class="toggle"
+            type="checkbox"
+            name="published"
+            value={true}
+            checked={post.published}
+          />
+        </label>
 
-    <div>
-      <div>내용</div>
-      {#key post.id}
-        <ToastUiEditor bind:this={toastUiEditor} body={post.body} saveBody={Post__saveBody} />
-      {/key}
-    </div>
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">글 목록에서 공개</span>
+          </div>
+          <input
+            class="toggle"
+            type="checkbox"
+            name="published"
+            value={true}
+            checked={post.listed}
+          />
+        </label>
 
-    <div>
-      <button class="btn" type="button" onclick={() => history.back()}>취소</button>
-      <button class="btn btn-primary" type="submit">저장</button>
-    </div>
-  </form>
-{:catch error}
-  {error.msg}
-{/await}
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">제목</span>
+          </div>
+          <input class="input input-bordered" type="text" name="title" value={post.title} />
+        </label>
+
+        <div>
+          {#key post.id}
+            <ToastUiEditor bind:this={toastUiEditor} body={post.body} saveBody={Post__saveBody} />
+          {/key}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <button
+            class="btn btn-outline"
+            type="button"
+            onclick={() => window.confirm('편집을 마치시겠습니까?') && history.back()}>취소</button
+          >
+          <button class="btn btn-primary" type="submit">
+            <i class="fa-solid fa-pen-to-square"></i> 저장
+          </button>
+        </div>
+      </form>
+    {:catch error}
+      {error.msg}
+    {/await}
+  </div>
+</div>

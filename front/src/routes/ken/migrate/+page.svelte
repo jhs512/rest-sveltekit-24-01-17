@@ -34,33 +34,42 @@
     <div class="divider"></div>
 
     <form on:submit|preventDefault={submitLoginForm} class="grid grid-cols-1 gap-4">
-      <div>
-        <div>기존 아이디</div>
-        <div class="mt-2">
-          <input
-            type="text"
-            name="username"
-            class="input input-bordered w-full"
-            placeholder="(선택입력)기존 아이디"
-          />
+      <label class="form-control">
+        <div class="label">
+          <span class="label-text">기존 아이디</span>
         </div>
-      </div>
+        <input
+          type="text"
+          name="username"
+          class="input input-bordered w-full"
+          placeholder="(선택입력)기존 아이디"
+          autocomplete="off"
+        />
 
-      <div>
-        <div>기존 비밀번호</div>
-        <div class="mt-2">
-          <input
-            type="password"
-            name="password"
-            class="input input-bordered w-full"
-            placeholder="(선택입력)기존 비밀번호"
-          />
+        <div class="label">
+          <span class="label-text-alt">
+            이전 사이트(scode, wiken)에서 사용하시던 계정이 있다면, 그것의 아이디를 입력해주세요.
+          </span>
         </div>
-        <div class="mt-2 text-gray-400 text-sm">
-          기존 사이트에서 사용하시던 아이디와 비밀번호를 입력해주세요. 만약에 카카오 로그인을
-          사용하셨다면, 입력하지 않으셔도 됩니다.
+      </label>
+
+      <label class="form-control">
+        <div class="label">
+          <span class="label-text">기존 비밀번호</span>
         </div>
-      </div>
+        <input
+          type="password"
+          name="password"
+          class="input input-bordered w-full"
+          placeholder="(선택입력)기존 비밀번호"
+        />
+
+        <div class="label">
+          <span class="label-text-alt">
+            이전 사이트(scode, wiken)에서 사용하시던 계정이 있다면, 그것의 비밀번호를 입력해주세요.
+          </span>
+        </div>
+      </label>
 
       <div>
         <button type="submit" class="btn btn-primary w-full"

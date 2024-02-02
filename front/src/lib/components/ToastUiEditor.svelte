@@ -413,7 +413,14 @@
             }
           },
           language: 'ko-KR',
-          placeholder: stripIndent(`내용을 입력해주세요.`).trim(),
+          placeholder: stripIndent(
+            `
+            내용을 입력해주세요.
+            툴바의 S 버튼으로 내용을 저장할 수 있습니다.
+            툴바의 F 버튼으로 에디터를 풀스크린 모드로 토글할 수 있습니다.
+            더 자세한 단축키정보는 메인 페이지의 공지사항을 확인해주세요.
+            `
+          ).trim(),
           ...editorConfig
         });
 

@@ -32,8 +32,8 @@
   }
 </script>
 
-<div class="flex-grow flex justify-center items-center">
-  <div class="w-full max-w-screen-2xl px-2 mt-4">
+<div class="flex-grow flex justify-center">
+  <div class="w-full max-w-screen-2xl px-2 my-4">
     <div class="text-center">
       <div class="font-bold text-lg">공개글</div>
       <div class="mt-3 text-gray-400">공개된 글 입니다.</div>
