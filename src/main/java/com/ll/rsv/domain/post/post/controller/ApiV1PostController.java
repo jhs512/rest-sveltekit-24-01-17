@@ -1,5 +1,7 @@
 package com.ll.rsv.domain.post.post.controller;
 
+import com.ll.rsv.domain.member.member.entity.Member;
+import com.ll.rsv.domain.member.member.service.MemberService;
 import com.ll.rsv.domain.post.post.dto.PostDto;
 import com.ll.rsv.domain.post.post.dto.PostWithBodyDto;
 import com.ll.rsv.domain.post.post.entity.Post;
@@ -42,6 +44,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Transactional(readOnly = true)
 public class ApiV1PostController {
     private final PostService postService;
+    private final MemberService memberService;
     private final Rq rq;
 
 
@@ -115,6 +118,38 @@ public class ApiV1PostController {
 
         return RsData.of(
                 new GetMineResponseBody(
+                        new PageDto<>(_itemPage)
+                )
+        );
+    }
+
+
+    public record GetByAuthorResponseBody(@NonNull PageDto<PostDto> itemPage) {
+    }
+
+    @GetMapping(value = "/byAuthor/{authorId}", consumes = ALL_VALUE)
+    @Operation(summary = "특정 회원의글 다건조회")
+    public RsData<GetByAuthorResponseBody> getByAuthor(
+            @PathVariable long authorId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String kw,
+            @RequestParam(defaultValue = "ALL") KwTypeV1 kwType
+    ) {
+        Member member = memberService.findById(authorId).orElseThrow(GlobalException.E404::new);
+
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+        Page<Post> itemPage = postService.findByKw(kwType, kw, member, null, null, pageable);
+
+        if (rq.isLogin()) {
+            postService.loadLikeMap(itemPage.getContent(), rq.getMember());
+        }
+
+        Page<PostDto> _itemPage = itemPage.map(this::postToDto);
+
+        return RsData.of(
+                new GetByAuthorResponseBody(
                         new PageDto<>(_itemPage)
                 )
         );

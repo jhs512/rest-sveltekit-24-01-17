@@ -20,6 +20,11 @@
       </div>
 
       <div>
+        <div class="font-bold">번호</div>
+        <div class="text-gray-500 mt-1">{rq.member.id}</div>
+      </div>
+
+      <div>
         <div class="font-bold">가입</div>
         <div class="text-gray-500 mt-1">{prettyDate(rq.member.createDate)}</div>
       </div>

@@ -57,6 +57,10 @@ export interface paths {
     /** 내글 다건조회 */
     get: operations["getMine"];
   };
+  "/api/v1/posts/byAuthor/{authorId}": {
+    /** 특정 회원의글 다건조회 */
+    get: operations["getByAuthor"];
+  };
   "/api/v1/postComments/{postId}": {
     /** 댓글 다건조회 */
     get: operations["getPosts_1"];
@@ -291,6 +295,16 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetMineResponseBody"];
+    };
+    GetByAuthorResponseBody: {
+      itemPage: components["schemas"]["PageDtoPostDto"];
+    };
+    RsDataGetByAuthorResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetByAuthorResponseBody"];
     };
     GetPostCommentsResponseBody: {
       items: components["schemas"]["PostCommentDto"][];
@@ -670,6 +684,33 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetMineResponseBody"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 특정 회원의글 다건조회 */
+  getByAuthor: {
+    parameters: {
+      query?: {
+        page?: number;
+        kw?: string;
+        kwType?: "ALL" | "TITLE" | "BODY" | "NAME";
+      };
+      path: {
+        authorId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetByAuthorResponseBody"];
         };
       };
       /** @description Bad Request */
