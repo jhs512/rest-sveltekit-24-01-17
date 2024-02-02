@@ -90,7 +90,7 @@
     return data!;
   }
 
-  async function submitLoginForm(this: HTMLFormElement) {
+  async function submitEditForm(this: HTMLFormElement) {
     const form: HTMLFormElement = this;
 
     const titleInput = form.elements.namedItem('title') as HTMLInputElement;
@@ -109,10 +109,18 @@
       return;
     }
 
+    console.log(
+      'toastUiEditor.editor.getMarkdown().trim() : ' + toastUiEditor.editor.getMarkdown().trim()
+    );
+
     const { data, error } = await rq.apiEndPoints().PUT('/api/v1/posts/{id}', {
       params: { path: { id: parseInt($page.params.id) } },
       body: {
         title: titleInput.value,
+        tagContents: form.tagContents.value
+          .split('#')
+          .map((tagContent: string) => tagContent.trim())
+          .filter((tag: string) => tag.length > 0),
         body: toastUiEditor.editor.getMarkdown().trim(),
         published: form.published.checked,
         listed: form.listed.checked
@@ -142,7 +150,7 @@
     {#await load()}
       <div>loading...</div>
     {:then { data: { item: post } }}
-      <form on:submit|preventDefault={submitLoginForm} class="grid grid-cols-1 gap-4">
+      <form on:submit|preventDefault={submitEditForm} class="grid grid-cols-1 gap-4">
         <!-- svelte-ignore a11y-label-has-associated-control -->
         <label class="form-control">
           <div class="label">
@@ -176,13 +184,7 @@
           <div class="label">
             <span class="label-text">글 목록에서 공개</span>
           </div>
-          <input
-            class="toggle"
-            type="checkbox"
-            name="published"
-            value={true}
-            checked={post.listed}
-          />
+          <input class="toggle" type="checkbox" name="listed" value={true} checked={post.listed} />
         </label>
 
         <label class="form-control">
@@ -192,10 +194,36 @@
           <input class="input input-bordered" type="text" name="title" value={post.title} />
         </label>
 
-        <div>
-          {#key post.id}
-            <ToastUiEditor bind:this={toastUiEditor} body={post.body} saveBody={Post__saveBody} />
-          {/key}
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">태그</span>
+          </div>
+          <input
+            class="input input-bordered"
+            type="text"
+            name="tagContents"
+            value={post.tagContents.map((tag) => `#${tag}`).join(' ')}
+          />
+          <div class="label">
+            <span class="label-text-alt"> 구분자는 `#` 입니다. </span>
+          </div>
+        </label>
+
+        <div class="form-control">
+          <div class="label">
+            <span class="label-text">내용</span>
+          </div>
+          <div>
+            {#key post.id}
+              <ToastUiEditor bind:this={toastUiEditor} body={post.body} saveBody={Post__saveBody} />
+            {/key}
+          </div>
+          <div class="label">
+            <span class="label-text-alt">
+              에디터의 F 키를 누르면 에디터 풀스크린 모드가 토글 됩니다. 해당 단축키는 Ctrl(Cmd) + Q
+              입니다. 기타 다른 단축키는 메인 화면의 공지사항을 참고해주세요.
+            </span>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">

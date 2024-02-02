@@ -204,6 +204,7 @@
         <div class="card-body">
           <div class="detail grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-3">
             <div class="form-control">
+              <!-- svelte-ignore a11y-label-has-associated-control -->
               <label class="label">
                 <span class="label-text">번호</span>
               </label>
@@ -211,6 +212,7 @@
             </div>
 
             <div class="form-control">
+              <!-- svelte-ignore a11y-label-has-associated-control -->
               <label class="label">
                 <span class="label-text">작성일</span>
               </label>
@@ -218,6 +220,7 @@
             </div>
 
             <div class="form-control">
+              <!-- svelte-ignore a11y-label-has-associated-control -->
               <label class="label">
                 <span class="label-text">작성자</span>
               </label>
@@ -225,6 +228,7 @@
             </div>
 
             <div class="form-control">
+              <!-- svelte-ignore a11y-label-has-associated-control -->
               <label class="label">
                 <span class="label-text">공개여부</span>
               </label>
@@ -236,6 +240,7 @@
             </div>
 
             <div class="form-control col-span-full">
+              <!-- svelte-ignore a11y-label-has-associated-control -->
               <label class="label">
                 <span class="label-text">제목</span>
               </label>
@@ -256,6 +261,7 @@
             </div>
 
             <div class="form-control col-span-full">
+              <!-- svelte-ignore a11y-label-has-associated-control -->
               <label class="label">
                 <span class="label-text">내용</span>
               </label>

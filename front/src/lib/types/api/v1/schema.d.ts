@@ -86,6 +86,7 @@ export interface components {
     EditRequestBody: {
       title: string;
       body: string;
+      tagContents: string[];
       published: boolean;
       listed: boolean;
     };

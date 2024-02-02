@@ -155,15 +155,26 @@ public class Post extends BaseTime {
                 .anyMatch(it -> it.getContent().equals(content));
     }
 
-
-    public void setModified() {
-        setModifyDate(LocalDateTime.now());
-    }
-
     public List<String> getTagContents() {
         return tags
                 .stream()
                 .map(PostTag::getContent)
                 .toList();
+    }
+
+    public void setTagContents(List<String> tagContents) {
+        // tags 에서 tagContents 에 없는 것은 삭제
+        tags.removeIf(it -> !tagContents.contains(it.getContent()));
+
+        // tagContents 에서 tags에 없는 것은 추가
+        tagContents
+                .stream()
+                .filter(it -> !hasTag(it))
+                .forEach(this::addTag);
+    }
+
+
+    public void setModified() {
+        setModifyDate(LocalDateTime.now());
     }
 }

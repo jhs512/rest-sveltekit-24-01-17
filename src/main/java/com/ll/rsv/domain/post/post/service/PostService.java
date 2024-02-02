@@ -98,10 +98,11 @@ public class PostService {
     }
 
     @Transactional
-    public void edit(Post post, String title, String body, boolean published, boolean listed) {
+    public void edit(Post post, String title, List<String> tagContents, String body, boolean published, boolean listed) {
         post.setTitle(title);
         post.setPublished(published);
         post.setListed(listed);
+        post.setTagContents(tagContents);
 
         editBody(post, body);
     }

@@ -145,6 +145,7 @@ public class ApiV1PostController {
     public record EditRequestBody(
             @NotBlank String title,
             @NotBlank String body,
+            @NotNull List<String> tagContents,
             @NotNull boolean published,
             @NotNull boolean listed
     ) {
@@ -165,7 +166,7 @@ public class ApiV1PostController {
         if (!postService.canEdit(rq.getMember(), post))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
-        postService.edit(post, requestBody.title, requestBody.body, requestBody.published, requestBody.listed);
+        postService.edit(post, requestBody.title, requestBody.tagContents, requestBody.body, requestBody.published, requestBody.listed);
 
         return RsData.of(
                 "%d번 글이 수정되었습니다.".formatted(id),
