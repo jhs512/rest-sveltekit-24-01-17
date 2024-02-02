@@ -7,8 +7,8 @@ import com.ll.rsv.domain.post.post.repository.PostDetailRepository;
 import com.ll.rsv.domain.post.post.repository.PostRepository;
 import com.ll.rsv.domain.post.postLike.entity.PostLike;
 import com.ll.rsv.domain.post.postLike.repository.PostLikeRepository;
+import com.ll.rsv.global.rqCache.RqCache;
 import com.ll.rsv.global.rsData.RsData;
-import com.ll.rsv.global.transactionCache.TransactionCache;
 import com.ll.rsv.standard.base.KwTypeV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +29,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostDetailRepository postDetailRepository;
     private final PostLikeRepository postLikeRepository;
-    private final TransactionCache transactionCache;
+    private final RqCache rqCache;
 
     @Transactional
     public Post write(Member author, String title, String body, boolean published, boolean listed) {
@@ -137,7 +137,7 @@ public class PostService {
         if (actor == null) return false;
         if (post == null) return false;
 
-        Map<Long, Boolean> likeMap = transactionCache.get("likeMap");
+        Map<Long, Boolean> likeMap = rqCache.get("likeMap");
         if (likeMap != null && likeMap.containsKey(post.getId())) return !likeMap.get(post.getId());
 
         return !post.hasLike(actor);
@@ -147,7 +147,7 @@ public class PostService {
         if (actor == null) return false;
         if (post == null) return false;
 
-        Map<Long, Boolean> likeMap = transactionCache.get("likeMap");
+        Map<Long, Boolean> likeMap = rqCache.get("likeMap");
         if (likeMap != null && likeMap.containsKey(post.getId())) return likeMap.get(post.getId());
 
         return post.hasLike(actor);
@@ -215,6 +215,6 @@ public class PostService {
                         HashMap::putAll
                 );
 
-        transactionCache.put("likeMap", likeMap);
+        rqCache.put("likeMap", likeMap);
     }
 }
