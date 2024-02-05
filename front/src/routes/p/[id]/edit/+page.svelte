@@ -109,15 +109,21 @@
       return;
     }
 
-    if (form['video__1'].files[0]) {
-      const formData = new FormData();
-      formData.append('file', form['video__1'].files[0]);
+    for (let i = 1; true; i++) {
+      if (!form[`video__${i}`]) break;
 
-      await rq.apiEndPoints().PUT('/api/v1/posts/{id}/video', {
-        params: { path: { id: parseInt($page.params.id) } },
-        body: formData as any,
-        bodySerializer: (body) => body
-      });
+      if (form[`video__${i}`].files.length > 0) {
+        const formData = new FormData();
+        formData.append('file', form[`video__${i}`].files[0]);
+
+        rq.msgInfo(`영상 ${i}(을)를 업로드 중입니다. 잠시만 기다려주세요.`);
+
+        await rq.apiEndPoints().PUT('/api/v1/posts/{id}/video', {
+          params: { path: { id: parseInt($page.params.id) } },
+          body: formData as any,
+          bodySerializer: (body) => body
+        });
+      }
     }
 
     const { data, error } = await rq.apiEndPoints().PUT('/api/v1/posts/{id}', {
