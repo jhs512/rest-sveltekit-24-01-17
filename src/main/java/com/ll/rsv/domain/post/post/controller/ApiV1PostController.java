@@ -1,5 +1,7 @@
 package com.ll.rsv.domain.post.post.controller;
 
+import com.ll.rsv.domain.base.genFile.dto.GenFileDto;
+import com.ll.rsv.domain.base.genFile.entity.GenFile.GenFile;
 import com.ll.rsv.domain.base.genFile.service.GenFileService.GenFileService;
 import com.ll.rsv.domain.member.member.entity.Member;
 import com.ll.rsv.domain.member.member.service.MemberService;
@@ -281,6 +283,35 @@ public class ApiV1PostController {
                 new GetPostBodyResponseBody(
                         post.getModifyDate(),
                         post.getDetailBody().getVal()
+                )
+        );
+    }
+
+
+    public record GetPostFilesResponseBody(
+            @NonNull List<GenFileDto> items
+    ) {
+    }
+
+    @GetMapping(value = "/{id}/files", consumes = ALL_VALUE)
+    @Operation(summary = "글(본문)의 파일들 조회")
+    @Transactional
+    public RsData<GetPostFilesResponseBody> getPostFiles(
+            @PathVariable long id
+    ) {
+        Post post = postService.findById(id).orElseThrow(GlobalException.E404::new);
+
+        if (!postService.canRead(rq.getMember(), post))
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
+        List<GenFile> files = genFileService.findByRel(post);
+
+        return RsData.of(
+                new GetPostFilesResponseBody(
+                        files
+                                .stream()
+                                .map(GenFileDto::new)
+                                .toList()
                 )
         );
     }

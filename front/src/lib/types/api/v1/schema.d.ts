@@ -57,6 +57,10 @@ export interface paths {
     /** 글 다건조회 */
     get: operations["getPosts"];
   };
+  "/api/v1/posts/{id}/files": {
+    /** 글(본문)의 파일들 조회 */
+    get: operations["getPostFiles"];
+  };
   "/api/v1/posts/mine": {
     /** 내글 다건조회 */
     get: operations["getMine"];
@@ -277,6 +281,41 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostResponseBody"];
+    };
+    GenFileDto: {
+      /** Format: int64 */
+      id: number;
+      /** Format: date-time */
+      createDate: string;
+      /** Format: date-time */
+      modifyDate: string;
+      fileName: string;
+      relTypeCode: string;
+      /** Format: int64 */
+      relId: number;
+      typeCode: string;
+      type2Code: string;
+      fileExtTypeCode: string;
+      fileExtType2Code: string;
+      /** Format: int64 */
+      fileSize: number;
+      /** Format: int64 */
+      fileNo: number;
+      fileExt: string;
+      fileDir: string;
+      originFileName: string;
+      url: string;
+      downloadUrl: string;
+    };
+    GetPostFilesResponseBody: {
+      items: components["schemas"]["GenFileDto"][];
+    };
+    RsDataGetPostFilesResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetPostFilesResponseBody"];
     };
     GetPostBodyResponseBody: {
       /** Format: date-time */
@@ -695,6 +734,28 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetPostsResponseBody"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 글(본문)의 파일들 조회 */
+  getPostFiles: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetPostFilesResponseBody"];
         };
       };
       /** @description Bad Request */

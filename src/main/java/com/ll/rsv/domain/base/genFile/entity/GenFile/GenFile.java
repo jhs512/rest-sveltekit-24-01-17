@@ -46,7 +46,7 @@ public class GenFile extends BaseTime {
     }
 
     public String getDownloadUrl() {
-        return "/genFile/download/" + getId();
+        return "/genFile/download/" + getFileNo();
     }
 
     public String getFilePath() {
