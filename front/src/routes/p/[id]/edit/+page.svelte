@@ -109,9 +109,16 @@
       return;
     }
 
-    console.log(
-      'toastUiEditor.editor.getMarkdown().trim() : ' + toastUiEditor.editor.getMarkdown().trim()
-    );
+    if (form['video__1'].files[0]) {
+      const formData = new FormData();
+      formData.append('file', form['video__1'].files[0]);
+
+      await rq.apiEndPoints().PUT('/api/v1/posts/{id}/video', {
+        params: { path: { id: parseInt($page.params.id) } },
+        body: formData as any,
+        bodySerializer: (body) => body
+      });
+    }
 
     const { data, error } = await rq.apiEndPoints().PUT('/api/v1/posts/{id}', {
       params: { path: { id: parseInt($page.params.id) } },
@@ -233,33 +240,25 @@
           </div>
         </div>
 
-        <div class="form-control">
-          <div class="label">
-            <span class="label-text">영상 1</span>
+        {#each [1, 2] as videoIndex}
+          <div class="form-control">
+            <div class="label">
+              <span class="label-text">영상 {videoIndex}</span>
+            </div>
+            <div>
+              <input
+                class="file-input file-input-bordered"
+                type="file"
+                name={`video__${videoIndex}`}
+              />
+            </div>
+            <div class="label">
+              <span class="label-text-alt">
+                mp4 파일만 업로드 가능합니다. 파일 업로드는 5MB 이하만 가능합니다.
+              </span>
+            </div>
           </div>
-          <div>
-            <input class="file-input file-input-bordered" type="file" name="video__1" />
-          </div>
-          <div class="label">
-            <span class="label-text-alt">
-              mp4 파일만 업로드 가능합니다. 파일 업로드는 5MB 이하만 가능합니다.
-            </span>
-          </div>
-        </div>
-
-        <div class="form-control">
-          <div class="label">
-            <span class="label-text">영상 2</span>
-          </div>
-          <div>
-            <input class="file-input file-input-bordered" type="file" name="video__2" />
-          </div>
-          <div class="label">
-            <span class="label-text-alt">
-              mp4 파일만 업로드 가능합니다. 파일 업로드는 5MB 이하만 가능합니다.
-            </span>
-          </div>
-        </div>
+        {/each}
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <button

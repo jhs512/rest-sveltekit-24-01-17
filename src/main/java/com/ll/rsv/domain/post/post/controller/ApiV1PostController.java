@@ -27,13 +27,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.http.MediaType.ALL_VALUE;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.*;
 
 
 @RestController
@@ -207,6 +207,26 @@ public class ApiV1PostController {
                 "%d번 글이 수정되었습니다.".formatted(id),
                 new EditResponseBody(postToWithBodyDto(post))
         );
+    }
+
+
+    @PutMapping(value = "/{id}/video", consumes = MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "글의 비디오 업로드")
+    @Transactional
+    public RsData<Empty> uploadVideo(
+            @PathVariable long id,
+            @RequestParam("file") MultipartFile file
+    ) {
+        Post post = postService.findById(id).orElseThrow(GlobalException.E404::new);
+
+        System.out.println("file.getOriginalFilename() : " + file.getOriginalFilename()); // TODO : 지워야 함
+
+        if (!postService.canEdit(rq.getMember(), post))
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
+        // TODO : 구현해야 함
+
+        return RsData.OK;
     }
 
 

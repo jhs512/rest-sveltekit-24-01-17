@@ -3,75 +3,78 @@
  * Do not make direct changes to the file.
  */
 
-
 export interface paths {
-  "/api/v1/posts/{id}": {
+  '/api/v1/posts/{id}': {
     /** 글 단건조회 */
-    get: operations["getPost"];
+    get: operations['getPost'];
     /** 글 편집 */
-    put: operations["edit"];
+    put: operations['edit'];
     /** 글 삭제 */
-    delete: operations["delete"];
+    delete: operations['delete'];
   };
-  "/api/v1/posts/{id}/body": {
+  '/api/v1/posts/{id}/video': {
+    /** 글의 비디오 업로드 */
+    put: operations['uploadVideo'];
+  };
+  '/api/v1/posts/{id}/body': {
     /** 글(본문) 단건조회 */
-    get: operations["getPostBody"];
+    get: operations['getPostBody'];
     /** 글 본문 편집 */
-    put: operations["editBody"];
+    put: operations['editBody'];
   };
-  "/api/v1/postComments/{postId}/{postCommentId}": {
+  '/api/v1/postComments/{postId}/{postCommentId}': {
     /** 댓글 수정 */
-    put: operations["edit_1"];
+    put: operations['edit_1'];
     /** 댓글 삭제 */
-    delete: operations["delete_1"];
+    delete: operations['delete_1'];
   };
-  "/api/v1/wikenMigrate/migrate": {
+  '/api/v1/wikenMigrate/migrate': {
     /** 마이그레이트 */
-    post: operations["migrate"];
+    post: operations['migrate'];
   };
-  "/api/v1/posts/{id}/like": {
+  '/api/v1/posts/{id}/like': {
     /** 글 추천 */
-    post: operations["like"];
+    post: operations['like'];
   };
-  "/api/v1/posts/temp": {
+  '/api/v1/posts/temp': {
     /** 임시 글 생성 */
-    post: operations["makeTemp"];
+    post: operations['makeTemp'];
   };
-  "/api/v1/postComments/{postId}/temp": {
+  '/api/v1/postComments/{postId}/temp': {
     /** 임시 댓글 생성 */
-    post: operations["makeTemp_1"];
+    post: operations['makeTemp_1'];
   };
-  "/api/v1/members/logout": {
+  '/api/v1/members/logout': {
     /** 로그아웃 */
-    post: operations["logout"];
+    post: operations['logout'];
   };
-  "/api/v1/members/login": {
+  '/api/v1/members/login': {
     /** 로그인, accessToken, refreshToken 쿠키 생성됨 */
-    post: operations["login"];
+    post: operations['login'];
   };
-  "/api/v1/posts": {
+  '/api/v1/posts': {
     /** 글 다건조회 */
-    get: operations["getPosts"];
+    get: operations['getPosts'];
   };
-  "/api/v1/posts/mine": {
+  '/api/v1/posts/mine': {
     /** 내글 다건조회 */
-    get: operations["getMine"];
+    get: operations['getMine'];
   };
-  "/api/v1/posts/byAuthor/{authorId}": {
+  '/api/v1/posts/byAuthor/{authorId}': {
     /** 특정 회원의글 다건조회 */
-    get: operations["getByAuthor"];
+    get: operations['getByAuthor'];
   };
-  "/api/v1/postComments/{postId}": {
+  '/api/v1/postComments/{postId}': {
     /** 댓글 다건조회 */
-    get: operations["getPosts_1"];
+    get: operations['getPosts_1'];
   };
-  "/api/v1/members/me": {
+  '/api/v1/members/me': {
     /** 내 정보 */
-    get: operations["getMe"];
+    get: operations['getMe'];
   };
-  "/api/v1/posts/{id}/cancelLike": {
+  '/api/v1/posts/{id}/cancelLike': {
     /** 글 추천취소 */
-    delete: operations["cancelLike"];
+    delete: operations['cancelLike'];
   };
 }
 
@@ -85,7 +88,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["Empty"];
+      data: components['schemas']['Empty'];
     };
     EditRequestBody: {
       title: string;
@@ -95,7 +98,7 @@ export interface components {
       listed: boolean;
     };
     EditResponseBody: {
-      item: components["schemas"]["PostWithBodyDto"];
+      item: components['schemas']['PostWithBodyDto'];
     };
     PostWithBodyDto: {
       /** Format: int64 */
@@ -126,7 +129,7 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["EditResponseBody"];
+      data: components['schemas']['EditResponseBody'];
     };
     EditBodyRequestBody: {
       body: string;
@@ -135,7 +138,7 @@ export interface components {
       body: string;
     };
     EditCommentResponseBody: {
-      item: components["schemas"]["PostCommentDto"];
+      item: components['schemas']['PostCommentDto'];
     };
     PostCommentDto: {
       /** Format: int64 */
@@ -158,14 +161,14 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["EditCommentResponseBody"];
+      data: components['schemas']['EditCommentResponseBody'];
     };
     MigrateRequestBody: {
       username?: string;
       password?: string;
     };
     LikeResponseBody: {
-      item: components["schemas"]["PostDto"];
+      item: components['schemas']['PostDto'];
     };
     PostDto: {
       /** Format: int64 */
@@ -195,34 +198,34 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["LikeResponseBody"];
+      data: components['schemas']['LikeResponseBody'];
     };
     MakeTempResponseBody: {
-      item: components["schemas"]["PostDto"];
+      item: components['schemas']['PostDto'];
     };
     RsDataMakeTempResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["MakeTempResponseBody"];
+      data: components['schemas']['MakeTempResponseBody'];
     };
     RsDataWriteCommentResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["WriteCommentResponseBody"];
+      data: components['schemas']['WriteCommentResponseBody'];
     };
     WriteCommentResponseBody: {
-      item: components["schemas"]["PostCommentDto"];
+      item: components['schemas']['PostCommentDto'];
     };
     LoginRequestBody: {
       username: string;
       password: string;
     };
     LoginResponseBody: {
-      item: components["schemas"]["MemberDto"];
+      item: components['schemas']['MemberDto'];
     };
     MemberDto: {
       /** Format: int64 */
@@ -241,10 +244,10 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["LoginResponseBody"];
+      data: components['schemas']['LoginResponseBody'];
     };
     GetPostsResponseBody: {
-      itemPage: components["schemas"]["PageDtoPostDto"];
+      itemPage: components['schemas']['PageDtoPostDto'];
     };
     PageDtoPostDto: {
       /** Format: int64 */
@@ -255,24 +258,24 @@ export interface components {
       totalPagesCount: number;
       /** Format: int32 */
       number: number;
-      content: components["schemas"]["PostDto"][];
+      content: components['schemas']['PostDto'][];
     };
     RsDataGetPostsResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["GetPostsResponseBody"];
+      data: components['schemas']['GetPostsResponseBody'];
     };
     GetPostResponseBody: {
-      item: components["schemas"]["PostWithBodyDto"];
+      item: components['schemas']['PostWithBodyDto'];
     };
     RsDataGetPostResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["GetPostResponseBody"];
+      data: components['schemas']['GetPostResponseBody'];
     };
     GetPostBodyResponseBody: {
       /** Format: date-time */
@@ -284,57 +287,57 @@ export interface components {
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["GetPostBodyResponseBody"];
+      data: components['schemas']['GetPostBodyResponseBody'];
     };
     GetMineResponseBody: {
-      itemPage: components["schemas"]["PageDtoPostDto"];
+      itemPage: components['schemas']['PageDtoPostDto'];
     };
     RsDataGetMineResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["GetMineResponseBody"];
+      data: components['schemas']['GetMineResponseBody'];
     };
     GetByAuthorResponseBody: {
-      itemPage: components["schemas"]["PageDtoPostDto"];
+      itemPage: components['schemas']['PageDtoPostDto'];
     };
     RsDataGetByAuthorResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["GetByAuthorResponseBody"];
+      data: components['schemas']['GetByAuthorResponseBody'];
     };
     GetPostCommentsResponseBody: {
-      items: components["schemas"]["PostCommentDto"][];
+      items: components['schemas']['PostCommentDto'][];
     };
     RsDataGetPostCommentsResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["GetPostCommentsResponseBody"];
+      data: components['schemas']['GetPostCommentsResponseBody'];
     };
     MeResponseBody: {
-      item: components["schemas"]["MemberDto"];
+      item: components['schemas']['MemberDto'];
     };
     RsDataMeResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["MeResponseBody"];
+      data: components['schemas']['MeResponseBody'];
     };
     CancelLikeResponseBody: {
-      item: components["schemas"]["PostDto"];
+      item: components['schemas']['PostDto'];
     };
     RsDataCancelLikeResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["CancelLikeResponseBody"];
+      data: components['schemas']['CancelLikeResponseBody'];
     };
   };
   responses: never;
@@ -349,7 +352,6 @@ export type $defs = Record<string, never>;
 export type external = Record<string, never>;
 
 export interface operations {
-
   /** 글 단건조회 */
   getPost: {
     parameters: {
@@ -361,13 +363,13 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataGetPostResponseBody"];
+          'application/json': components['schemas']['RsDataGetPostResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -381,20 +383,20 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["EditRequestBody"];
+        'application/json': components['schemas']['EditRequestBody'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataEditResponseBody"];
+          'application/json': components['schemas']['RsDataEditResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -410,13 +412,43 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
+        };
+      };
+    };
+  };
+  /** 글의 비디오 업로드 */
+  uploadVideo: {
+    parameters: {
+      path: {
+        id: number;
+      };
+    };
+    requestBody?: {
+      content: {
+        'multipart/form-data': {
+          /** Format: binary */
+          file: string;
+        };
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          'application/json': components['schemas']['RsDataEmpty'];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -435,13 +467,13 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataGetPostBodyResponseBody"];
+          'application/json': components['schemas']['RsDataGetPostBodyResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -455,20 +487,20 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["EditBodyRequestBody"];
+        'application/json': components['schemas']['EditBodyRequestBody'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -483,20 +515,20 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["EditCommentRequestBody"];
+        'application/json': components['schemas']['EditCommentRequestBody'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataEditCommentResponseBody"];
+          'application/json': components['schemas']['RsDataEditCommentResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -513,13 +545,13 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -528,20 +560,20 @@ export interface operations {
   migrate: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["MigrateRequestBody"];
+        'application/json': components['schemas']['MigrateRequestBody'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -557,13 +589,13 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataLikeResponseBody"];
+          'application/json': components['schemas']['RsDataLikeResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -574,13 +606,13 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataMakeTempResponseBody"];
+          'application/json': components['schemas']['RsDataMakeTempResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -596,13 +628,13 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataWriteCommentResponseBody"];
+          'application/json': components['schemas']['RsDataWriteCommentResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -613,13 +645,13 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -628,20 +660,20 @@ export interface operations {
   login: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["LoginRequestBody"];
+        'application/json': components['schemas']['LoginRequestBody'];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataLoginResponseBody"];
+          'application/json': components['schemas']['RsDataLoginResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -652,20 +684,20 @@ export interface operations {
       query?: {
         page?: number;
         kw?: string;
-        kwType?: "ALL" | "TITLE" | "BODY" | "NAME";
+        kwType?: 'ALL' | 'TITLE' | 'BODY' | 'NAME';
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataGetPostsResponseBody"];
+          'application/json': components['schemas']['RsDataGetPostsResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -676,20 +708,20 @@ export interface operations {
       query?: {
         page?: number;
         kw?: string;
-        kwType?: "ALL" | "TITLE" | "BODY" | "NAME";
+        kwType?: 'ALL' | 'TITLE' | 'BODY' | 'NAME';
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataGetMineResponseBody"];
+          'application/json': components['schemas']['RsDataGetMineResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -700,7 +732,7 @@ export interface operations {
       query?: {
         page?: number;
         kw?: string;
-        kwType?: "ALL" | "TITLE" | "BODY" | "NAME";
+        kwType?: 'ALL' | 'TITLE' | 'BODY' | 'NAME';
       };
       path: {
         authorId: number;
@@ -710,13 +742,13 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataGetByAuthorResponseBody"];
+          'application/json': components['schemas']['RsDataGetByAuthorResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -732,13 +764,13 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataGetPostCommentsResponseBody"];
+          'application/json': components['schemas']['RsDataGetPostCommentsResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -749,13 +781,13 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataMeResponseBody"];
+          'application/json': components['schemas']['RsDataMeResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
@@ -771,13 +803,13 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataCancelLikeResponseBody"];
+          'application/json': components['schemas']['RsDataCancelLikeResponseBody'];
         };
       };
       /** @description Bad Request */
       400: {
         content: {
-          "application/json": components["schemas"]["RsDataEmpty"];
+          'application/json': components['schemas']['RsDataEmpty'];
         };
       };
     };
