@@ -13,7 +13,7 @@ export interface paths {
     /** 글 삭제 */
     delete: operations["delete"];
   };
-  "/api/v1/posts/{id}/video": {
+  "/api/v1/posts/{id}/mainVideo/{fileNo}": {
     /** 글의 비디오 업로드 */
     put: operations["uploadVideo"];
   };
@@ -430,6 +430,7 @@ export interface operations {
     parameters: {
       path: {
         id: number;
+        fileNo: number;
       };
     };
     requestBody?: {

@@ -22,4 +22,9 @@ public abstract class BaseEntity implements Persistable<Long> {
     public boolean isNew() {
         return id == null;
     }
+
+    public String getModelName() {
+        String simpleName = this.getClass().getSimpleName();
+        return Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
+    }
 }

@@ -1,5 +1,6 @@
 package com.ll.rsv.domain.post.post.controller;
 
+import com.ll.rsv.domain.base.genFile.service.GenFileService.GenFileService;
 import com.ll.rsv.domain.member.member.entity.Member;
 import com.ll.rsv.domain.member.member.service.MemberService;
 import com.ll.rsv.domain.post.post.dto.PostDto;
@@ -45,6 +46,7 @@ import static org.springframework.http.MediaType.*;
 public class ApiV1PostController {
     private final PostService postService;
     private final MemberService memberService;
+    private final GenFileService genFileService;
     private final Rq rq;
 
 
@@ -210,21 +212,20 @@ public class ApiV1PostController {
     }
 
 
-    @PutMapping(value = "/{id}/video", consumes = MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{id}/mainVideo/{fileNo}", consumes = MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "글의 비디오 업로드")
     @Transactional
     public RsData<Empty> uploadVideo(
             @PathVariable long id,
+            @PathVariable int fileNo,
             @RequestParam("file") MultipartFile file
     ) {
         Post post = postService.findById(id).orElseThrow(GlobalException.E404::new);
 
-        System.out.println("file.getOriginalFilename() : " + file.getOriginalFilename()); // TODO : 지워야 함
-
         if (!postService.canEdit(rq.getMember(), post))
             throw new GlobalException("403-1", "권한이 없습니다.");
 
-        // TODO : 구현해야 함
+        genFileService.save(post, "common", "mainVideo", fileNo, file);
 
         return RsData.OK;
     }

@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+
 @Configuration
 @Slf4j
 @RequiredArgsConstructor
@@ -35,6 +37,8 @@ public class All {
             @Transactional
             @Override
             public void run(ApplicationArguments args) throws Exception {
+                new File(AppConfig.getTempDirPath()).mkdirs();
+
                 if (memberService.findByUsername("system").isPresent()) return;
 
                 String memberSystemPassword = AppConfig.isProd() ? prodMemberSystemPassword : "1234";

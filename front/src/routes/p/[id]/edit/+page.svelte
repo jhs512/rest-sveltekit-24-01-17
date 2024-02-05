@@ -118,8 +118,8 @@
 
         rq.msgInfo(`영상 ${i}(을)를 업로드 중입니다. 잠시만 기다려주세요.`);
 
-        await rq.apiEndPoints().PUT('/api/v1/posts/{id}/video', {
-          params: { path: { id: parseInt($page.params.id) } },
+        await rq.apiEndPoints().PUT('/api/v1/posts/{id}/mainVideo/{fileNo}', {
+          params: { path: { id: parseInt($page.params.id), fileNo: i } },
           body: formData as any,
           bodySerializer: (body) => body
         });
