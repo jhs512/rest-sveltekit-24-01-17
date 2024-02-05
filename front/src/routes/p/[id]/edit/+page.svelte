@@ -191,7 +191,13 @@
           <div class="label">
             <span class="label-text">제목</span>
           </div>
-          <input class="input input-bordered" type="text" name="title" value={post.title} />
+          <input
+            class="input input-bordered"
+            type="text"
+            name="title"
+            value={post.title}
+            maxlength="150"
+          />
         </label>
 
         <label class="form-control">
@@ -203,6 +209,7 @@
             type="text"
             name="tagContents"
             value={post.tagContents.map((tag) => `#${tag}`).join(' ')}
+            maxlength="50"
           />
           <div class="label">
             <span class="label-text-alt"> 구분자는 `#` 입니다. </span>
@@ -222,6 +229,34 @@
             <span class="label-text-alt">
               에디터의 F 키를 누르면 에디터 풀스크린 모드가 토글 됩니다. 해당 단축키는 Ctrl(Cmd) + Q
               입니다. 기타 다른 단축키는 메인 화면의 공지사항을 참고해주세요.
+            </span>
+          </div>
+        </div>
+
+        <div class="form-control">
+          <div class="label">
+            <span class="label-text">영상 1</span>
+          </div>
+          <div>
+            <input class="file-input file-input-bordered" type="file" name="video__1" />
+          </div>
+          <div class="label">
+            <span class="label-text-alt">
+              mp4 파일만 업로드 가능합니다. 파일 업로드는 5MB 이하만 가능합니다.
+            </span>
+          </div>
+        </div>
+
+        <div class="form-control">
+          <div class="label">
+            <span class="label-text">영상 2</span>
+          </div>
+          <div>
+            <input class="file-input file-input-bordered" type="file" name="video__2" />
+          </div>
+          <div class="label">
+            <span class="label-text-alt">
+              mp4 파일만 업로드 가능합니다. 파일 업로드는 5MB 이하만 가능합니다.
             </span>
           </div>
         </div>
