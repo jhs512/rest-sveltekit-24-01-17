@@ -25,8 +25,8 @@ import java.io.FileNotFoundException;
 
 @Controller
 @RequestMapping("/genFile")
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 @Tag(name = "GenFileController", description = "파일 다운로드 등 다양한 기능 제공")
 public class GenFileController {
     private final GenFileService genFileService;
