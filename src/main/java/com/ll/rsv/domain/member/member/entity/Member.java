@@ -2,16 +2,16 @@ package com.ll.rsv.domain.member.member.entity;
 
 import com.ll.rsv.global.jpa.entity.BaseTime;
 import com.ll.rsv.standard.util.Ut;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 import lombok.*;
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -32,6 +32,14 @@ public class Member extends BaseTime {
     // 캐시 데이터
     @Transient
     private Boolean _isAdmin;
+
+    @Type(JsonType.class)
+    @Column(columnDefinition = "longtext")
+    @Builder.Default
+    private Map<String, Object> extra = new HashMap<>() {{
+        put("email", "jangka512@gmail.com");
+        put("age", 22);
+    }};
 
     @Transient
     public Collection<? extends GrantedAuthority> getAuthorities() {
