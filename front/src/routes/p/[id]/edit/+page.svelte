@@ -3,6 +3,8 @@
   import rq from '$lib/rq/rq.svelte';
   import hotkeys from 'hotkeys-js';
   import ToastUiEditor from '$lib/components/ToastUiEditor.svelte';
+  import { onMount } from 'svelte';
+  import type { components } from '$lib/types/api/v1/schema';
 
   function Post__switchTab() {
     var inactiveTabs = document.querySelectorAll('.toastui-editor-tabs > .tab-item:not(.active)');
@@ -90,6 +92,34 @@
     return data!;
   }
 
+  let genFileMap = $state<Record<string, Record<number, components['schemas']['GenFileDto']>>>({});
+
+  async function loadFiles() {
+    if (import.meta.env.SSR) throw new Error('CSR ONLY');
+
+    const { data, error } = await rq
+      .apiEndPoints()
+      .GET('/api/v1/posts/{id}/files', { params: { path: { id: parseInt($page.params.id) } } });
+
+    if (error) throw error;
+
+    genFileMap = data!.data.items.reduce((acc, cur) => {
+      // '이름__나이' 형태의 키 생성
+      const key = `${cur.typeCode}__${cur.type2Code}`;
+
+      // 해당 키가 이미 존재하면 배열에 현재 요소 추가, 그렇지 않으면 새 배열로 시작
+      if (!acc[key]) {
+        acc[key] = {};
+      }
+
+      acc[key][cur.fileNo] = cur;
+
+      return acc;
+    }, {} as any);
+
+    return data!;
+  }
+
   async function submitEditForm(this: HTMLFormElement) {
     const form: HTMLFormElement = this;
 
@@ -146,6 +176,10 @@
 
     rq.msgAndRedirect(data, error, '/p/' + $page.params.id);
   }
+
+  onMount(() => {
+    loadFiles();
+  });
 </script>
 
 <div class="flex-grow flex justify-center">
@@ -247,6 +281,15 @@
         </div>
 
         {#each [1, 2] as videoIndex}
+          {#if genFileMap['common__mainVideo'] && genFileMap['common__mainVideo'][videoIndex]}
+            <div class="form-control">
+              <div class="label">
+                <span class="label-text">기존 영상 {videoIndex}</span>
+              </div>
+              {genFileMap['common__mainVideo'][videoIndex].originFileName}
+            </div>
+          {/if}
+
           <div class="form-control">
             <div class="label">
               <span class="label-text">영상 {videoIndex}</span>

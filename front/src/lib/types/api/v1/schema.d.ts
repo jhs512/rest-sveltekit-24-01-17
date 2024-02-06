@@ -58,7 +58,7 @@ export interface paths {
     get: operations["getPosts"];
   };
   "/api/v1/posts/{id}/files": {
-    /** 글(본문)의 파일들 조회 */
+    /** 글의 파일들 조회 */
     get: operations["getPostFiles"];
   };
   "/api/v1/posts/mine": {
@@ -744,7 +744,7 @@ export interface operations {
       };
     };
   };
-  /** 글(본문)의 파일들 조회 */
+  /** 글의 파일들 조회 */
   getPostFiles: {
     parameters: {
       path: {

@@ -294,7 +294,7 @@ public class ApiV1PostController {
     }
 
     @GetMapping(value = "/{id}/files", consumes = ALL_VALUE)
-    @Operation(summary = "글(본문)의 파일들 조회")
+    @Operation(summary = "글의 파일들 조회")
     @Transactional
     public RsData<GetPostFilesResponseBody> getPostFiles(
             @PathVariable long id
