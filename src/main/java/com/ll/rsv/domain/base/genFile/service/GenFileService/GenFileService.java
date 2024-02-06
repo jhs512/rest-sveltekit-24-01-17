@@ -34,8 +34,6 @@ public class GenFileService {
                 fileNo,
                 filePath
         );
-
-        System.out.println("filePath = " + filePath); // TODO : remove
     }
 
     private String getCurrentDirName(String relTypeCode) {
@@ -52,22 +50,40 @@ public class GenFileService {
         String fileDir = getCurrentDirName(relTypeCode);
         String fileName = UUID.randomUUID() + "." + fileExt;
 
-        GenFile genFile = GenFile.builder()
-                .fileName(fileName)
-                .relTypeCode(relTypeCode)
-                .relId(relId)
-                .typeCode(typeCode)
-                .type2Code(type2Code)
-                .fileNo(fileNo)
-                .fileExtTypeCode(fileExtTypeCode)
-                .fileExtType2Code(fileExtType2Code)
-                .fileSize(fileSize)
-                .fileExt(fileExt)
-                .fileDir(fileDir)
-                .originFileName(originFileName)
-                .build();
+        GenFile genFile = genFileRepository
+                .findByRelTypeCodeAndRelIdAndTypeCodeAndType2CodeAndFileNo(
+                        relTypeCode, relId, typeCode, type2Code, fileNo
+                )
+                .orElse(null);
 
-        genFileRepository.save(genFile);
+        if (genFile != null) {
+            genFile.deleteOnDisk();
+
+            genFile.setOriginFileName(originFileName);
+            genFile.setFileExtTypeCode(fileExtTypeCode);
+            genFile.setFileExtType2Code(fileExtType2Code);
+            genFile.setFileExt(fileExt);
+            genFile.setFileSize(fileSize);
+            genFile.setFileDir(fileDir);
+            genFile.setFileName(fileName);
+        } else {
+            genFile = GenFile.builder()
+                    .fileName(fileName)
+                    .relTypeCode(relTypeCode)
+                    .relId(relId)
+                    .typeCode(typeCode)
+                    .type2Code(type2Code)
+                    .fileNo(fileNo)
+                    .fileExtTypeCode(fileExtTypeCode)
+                    .fileExtType2Code(fileExtType2Code)
+                    .fileSize(fileSize)
+                    .fileExt(fileExt)
+                    .fileDir(fileDir)
+                    .originFileName(originFileName)
+                    .build();
+
+            genFileRepository.save(genFile);
+        }
 
         File file = new File(genFile.getFilePath());
 
