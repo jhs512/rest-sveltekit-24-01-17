@@ -3,6 +3,7 @@ package com.ll.rsv.domain.base.genFile.service.GenFileService;
 import com.ll.rsv.domain.base.genFile.entity.GenFile.GenFile;
 import com.ll.rsv.domain.base.genFile.repository.GenFileRepository;
 import com.ll.rsv.global.app.AppConfig;
+import com.ll.rsv.global.exceptions.GlobalException;
 import com.ll.rsv.global.jpa.entity.BaseEntity;
 import com.ll.rsv.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
@@ -84,5 +85,21 @@ public class GenFileService {
 
     public Optional<GenFile> findByFileName(String fileName) {
         return genFileRepository.findByFileName(fileName);
+    }
+
+    @Transactional
+    public GenFile delete(BaseEntity entity, String typeCode, String type2Code, int fileNo) {
+        String relTypeCode = entity.getModelName();
+        long relId = entity.getId();
+
+        GenFile genFile = genFileRepository
+                .findByRelTypeCodeAndRelIdAndTypeCodeAndType2CodeAndFileNo(relTypeCode, relId, typeCode, type2Code, fileNo)
+                .orElseThrow(GlobalException.E404::new);
+
+        genFile.deleteOnDisk();
+
+        genFileRepository.delete(genFile);
+
+        return genFile;
     }
 }

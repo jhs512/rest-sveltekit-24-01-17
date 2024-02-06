@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class Ut {
     public static class str {
@@ -54,7 +55,7 @@ public class Ut {
             try {
                 ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", cmd);
                 Process process = processBuilder.start();
-                process.waitFor();
+                process.waitFor(1, TimeUnit.MINUTES);
             } catch (Exception e) {
                 e.printStackTrace();
             }

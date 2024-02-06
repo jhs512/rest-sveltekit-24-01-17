@@ -5,6 +5,8 @@ import com.ll.rsv.global.jpa.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.File;
+
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -49,5 +51,10 @@ public class GenFile extends BaseTime {
 
     public String getFilePath() {
         return AppConfig.getGenFileDirPath() + "/" + getFileDir() + "/" + getFileName();
+    }
+
+    public void deleteOnDisk() {
+        String filePath = getFilePath();
+        new File(filePath).delete();
     }
 }

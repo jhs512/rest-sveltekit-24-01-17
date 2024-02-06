@@ -233,9 +233,26 @@ public class ApiV1PostController {
     }
 
 
-    public record EditBodyRequestBody(@NotBlank String body) {
+    @DeleteMapping(value = "/{id}/mainVideo/{fileNo}", consumes = ALL_VALUE)
+    @Operation(summary = "글의 비디오 삭제")
+    @Transactional
+    public RsData<Empty> deleteVideo(
+            @PathVariable long id,
+            @PathVariable int fileNo
+    ) {
+        Post post = postService.findById(id).orElseThrow(GlobalException.E404::new);
+
+        if (!postService.canEdit(rq.getMember(), post))
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
+        genFileService.delete(post, "common", "mainVideo", fileNo);
+
+        return RsData.OK;
     }
 
+
+    public record EditBodyRequestBody(@NotBlank String body) {
+    }
 
     @PutMapping("/{id}/body")
     @Operation(summary = "글 본문 편집")
