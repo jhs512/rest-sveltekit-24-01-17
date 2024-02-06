@@ -78,4 +78,15 @@ public class PostCommentService {
     public Optional<PostComment> findById(long id) {
         return postCommentRepository.findById(id);
     }
+
+    public boolean canRead(Member actor, PostComment postComment) {
+        if (postComment == null) return false;
+
+        if (postComment.isPublished()) return true; // 공개글이면 가능
+
+        if (actor == null) return false;
+        if (actor.isAdmin()) return true; // 관리자이면 가능
+
+        return actor.equals(postComment.getAuthor()); // 그것도 아니라면 본인이 쓴 글이여야 함
+    }
 }

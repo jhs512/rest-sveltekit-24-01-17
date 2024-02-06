@@ -48,7 +48,7 @@ public class ApiV1PostCommentController {
 
     @GetMapping(value = "/{postId}", consumes = ALL_VALUE)
     @Operation(summary = "댓글 다건조회")
-    public RsData<GetPostCommentsResponseBody> getPosts(
+    public RsData<GetPostCommentsResponseBody> getPostComments(
             @PathVariable long postId
     ) {
         Post post = postService.findById(postId).orElseThrow(GlobalException.E404::new);
@@ -65,6 +65,45 @@ public class ApiV1PostCommentController {
 
         return RsData.of(
                 new GetPostCommentsResponseBody(
+                        _items
+                )
+        );
+    }
+
+
+    public record GetPostSubCommentsResponseBody(
+            @NonNull List<PostCommentDto> items
+    ) {
+    }
+
+    @GetMapping(value = "/{postId}/{postCommentId}/children", consumes = ALL_VALUE)
+    @Operation(summary = "서브 댓글 다건조회")
+    public RsData<GetPostSubCommentsResponseBody> getPostSubComments(
+            @PathVariable long postId,
+            @PathVariable long postCommentId
+    ) {
+        Post post = postService.findById(postId).orElseThrow(GlobalException.E404::new);
+
+        if (!postService.canRead(rq.getMember(), post))
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
+        PostComment postComment = postCommentService.findById(postCommentId).orElseThrow(GlobalException.E404::new);
+
+        if (!postCommentService.canRead(rq.getMember(), postComment))
+            throw new GlobalException("403-1", "권한이 없습니다.");
+
+        List<PostComment> items = postCommentService.findByPostAndPublishedAndParentCommentOrderByIdDesc(
+                post,
+                true,
+                postComment
+        );
+
+        List<PostCommentDto> _items = items.stream()
+                .map(this::postCommentToDto)
+                .collect(Collectors.toList());
+
+        return RsData.of(
+                new GetPostSubCommentsResponseBody(
                         _items
                 )
         );

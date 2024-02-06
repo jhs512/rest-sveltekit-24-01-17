@@ -73,7 +73,11 @@ export interface paths {
   };
   "/api/v1/postComments/{postId}": {
     /** 댓글 다건조회 */
-    get: operations["getPosts_1"];
+    get: operations["getPostComments"];
+  };
+  "/api/v1/postComments/{postId}/{postCommentId}/children": {
+    /** 서브 댓글 다건조회 */
+    get: operations["getPostSubComments"];
   };
   "/api/v1/members/me": {
     /** 내 정보 */
@@ -362,6 +366,16 @@ export interface components {
       statusCode: number;
       msg: string;
       data: components["schemas"]["GetPostCommentsResponseBody"];
+    };
+    GetPostSubCommentsResponseBody: {
+      items: components["schemas"]["PostCommentDto"][];
+    };
+    RsDataGetPostSubCommentsResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["GetPostSubCommentsResponseBody"];
     };
     MeResponseBody: {
       item: components["schemas"]["MemberDto"];
@@ -845,7 +859,7 @@ export interface operations {
     };
   };
   /** 댓글 다건조회 */
-  getPosts_1: {
+  getPostComments: {
     parameters: {
       path: {
         postId: number;
@@ -856,6 +870,29 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["RsDataGetPostCommentsResponseBody"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 서브 댓글 다건조회 */
+  getPostSubComments: {
+    parameters: {
+      path: {
+        postId: number;
+        postCommentId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataGetPostSubCommentsResponseBody"];
         };
       };
       /** @description Bad Request */
