@@ -104,7 +104,16 @@ public class GenFileService {
     }
 
     @Transactional
-    public GenFile delete(BaseEntity entity, String typeCode, String type2Code, int fileNo) {
+    public GenFile delete(GenFile genFile) {
+        genFile.deleteOnDisk();
+        genFileRepository.delete(genFile);
+
+        return genFile;
+
+    }
+
+    @Transactional
+    public void delete(BaseEntity entity, String typeCode, String type2Code, int fileNo) {
         String relTypeCode = entity.getModelName();
         long relId = entity.getId();
 
@@ -112,10 +121,12 @@ public class GenFileService {
                 .findByRelTypeCodeAndRelIdAndTypeCodeAndType2CodeAndFileNo(relTypeCode, relId, typeCode, type2Code, fileNo)
                 .orElseThrow(GlobalException.E404::new);
 
-        genFile.deleteOnDisk();
+        delete(genFile);
+    }
 
-        genFileRepository.delete(genFile);
-
-        return genFile;
+    @Transactional
+    public void deleteByRel(BaseEntity entity) {
+        findByRel(entity)
+                .forEach(this::delete);
     }
 }

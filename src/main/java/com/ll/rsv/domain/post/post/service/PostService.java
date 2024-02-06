@@ -1,5 +1,6 @@
 package com.ll.rsv.domain.post.post.service;
 
+import com.ll.rsv.domain.base.genFile.service.GenFileService.GenFileService;
 import com.ll.rsv.domain.member.member.entity.Member;
 import com.ll.rsv.domain.post.post.entity.Post;
 import com.ll.rsv.domain.post.post.entity.PostDetail;
@@ -29,6 +30,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostDetailRepository postDetailRepository;
     private final PostLikeRepository postLikeRepository;
+    private final GenFileService genFileService;
     private final RqCache rqCache;
 
     @Transactional
@@ -94,6 +96,7 @@ public class PostService {
 
     @Transactional
     public void delete(Post post) {
+        genFileService.deleteByRel(post);
         postRepository.delete(post);
     }
 
