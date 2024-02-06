@@ -2,10 +2,7 @@ package com.ll.rsv.domain.base.genFile.entity.GenFile;
 
 import com.ll.rsv.global.app.AppConfig;
 import com.ll.rsv.global.jpa.entity.BaseTime;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.*;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -28,6 +25,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @Setter
 public class GenFile extends BaseTime {
+    @Column(unique = true)
     private String fileName;
     private String relTypeCode;
     private long relId;
@@ -46,7 +44,7 @@ public class GenFile extends BaseTime {
     }
 
     public String getDownloadUrl() {
-        return "/genFile/download/" + getFileNo();
+        return "/genFile/download/" + getFileName();
     }
 
     public String getFilePath() {

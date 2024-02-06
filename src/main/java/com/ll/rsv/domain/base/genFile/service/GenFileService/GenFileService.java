@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -79,5 +80,9 @@ public class GenFileService {
 
     public List<GenFile> findByRel(BaseEntity entity) {
         return genFileRepository.findByRelTypeCodeAndRelId(entity.getModelName(), entity.getId());
+    }
+
+    public Optional<GenFile> findByFileName(String fileName) {
+        return genFileRepository.findByFileName(fileName);
     }
 }

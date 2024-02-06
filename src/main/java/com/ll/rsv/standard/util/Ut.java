@@ -10,9 +10,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -94,6 +96,10 @@ public class Ut {
             String urlAfter = url.substring(startPoint + endPoint + 1);
 
             return url.substring(0, startPoint) + urlAfter;
+        }
+
+        public static String encode(String url) {
+            return URLEncoder.encode(url, StandardCharsets.UTF_8);
         }
     }
 

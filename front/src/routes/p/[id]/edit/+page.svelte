@@ -284,9 +284,23 @@
           {#if genFileMap['common__mainVideo'] && genFileMap['common__mainVideo'][videoIndex]}
             <div class="form-control">
               <div class="label">
-                <span class="label-text">기존 영상 {videoIndex}</span>
+                <span class="label-text">기존 영상 {videoIndex} 삭제</span>
               </div>
-              {genFileMap['common__mainVideo'][videoIndex].originFileName}
+              <div>
+                <input class="toggle" type="checkbox" />
+              </div>
+
+              <div>
+                <a
+                  href={import.meta.env.VITE_CORE_API_BASE_URL +
+                    genFileMap['common__mainVideo'][videoIndex].downloadUrl}
+                  class="link"
+                >
+                  ({(genFileMap['common__mainVideo'][videoIndex].fileSize / 1024 / 1024).toFixed(
+                    2
+                  )}MB) {genFileMap['common__mainVideo'][videoIndex].originFileName}
+                </a>
+              </div>
             </div>
           {/if}
 
