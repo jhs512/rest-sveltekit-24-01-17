@@ -159,6 +159,8 @@ export interface components {
       authorName: string;
       authorProfileImgUrl: string;
       body: string;
+      /** Format: int64 */
+      childrenCount: number;
       actorCanEdit?: boolean;
       actorCanDelete?: boolean;
       editing?: boolean;

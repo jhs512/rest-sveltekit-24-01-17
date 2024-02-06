@@ -4,6 +4,7 @@ import com.ll.rsv.domain.member.member.entity.Member;
 import com.ll.rsv.domain.member.member.service.MemberService;
 import com.ll.rsv.domain.post.post.entity.Post;
 import com.ll.rsv.domain.post.post.service.PostService;
+import com.ll.rsv.domain.post.postComment.entity.PostComment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -52,16 +53,21 @@ public class NotProd {
                 post1.addLike(memberUser3);
                 post1.addLike(memberUser4);
 
-                post1.addComment(memberUser1, "댓글 1");
-                post1.addComment(memberUser1, "댓글 2");
-                post1.addComment(memberUser1, "댓글 3");
-                post1.addComment(memberUser1, "댓글 4");
-                post1.addComment(memberUser2, "댓글 5");
-                post1.addComment(memberUser2, "댓글 6");
-                post1.addComment(memberUser2, "댓글 7");
-                post1.addComment(memberUser3, "댓글 8");
-                post1.addComment(memberUser3, "댓글 9");
-                post1.addComment(memberUser4, "댓글 10");
+                PostComment postComment1 = post1.addComment(memberUser1, "댓글 1");
+                PostComment postComment2 = post1.addComment(memberUser1, "댓글 2");
+                PostComment postComment3 = post1.addComment(memberUser1, "댓글 3");
+                PostComment postComment4 = post1.addComment(memberUser1, "댓글 4");
+                PostComment postComment5 = post1.addComment(memberUser2, "댓글 5");
+                PostComment postComment6 = post1.addComment(memberUser2, "댓글 6");
+                PostComment postComment7 = post1.addComment(memberUser2, "댓글 7");
+                PostComment postComment8 = post1.addComment(memberUser3, "댓글 8");
+                PostComment postComment9 = post1.addComment(memberUser3, "댓글 9");
+                PostComment postComment10 = post1.addComment(memberUser4, "댓글 10");
+
+                postComment10.addComment(memberUser1, "대댓글 1");
+                postComment10.addComment(memberUser1, "대댓글 2");
+                postComment10.addComment(memberUser2, "대댓글 3");
+                postComment10.addComment(memberUser2, "대댓글 4");
 
                 post1.addTag("자바");
                 post1.addTag("스프링");

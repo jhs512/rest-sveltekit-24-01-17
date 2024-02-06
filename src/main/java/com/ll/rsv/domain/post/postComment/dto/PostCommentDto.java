@@ -23,6 +23,8 @@ public class PostCommentDto {
     private String authorProfileImgUrl;
     @NonNull
     private String body;
+    @NonNull
+    private long childrenCount;
 
     @Setter
     private Boolean actorCanEdit;
@@ -40,5 +42,6 @@ public class PostCommentDto {
         this.authorName = postComment.getAuthor().getName();
         this.authorProfileImgUrl = postComment.getAuthor().getProfileImgUrlOrDefault();
         this.body = postComment.getBody();
+        this.childrenCount = postComment.getChildrenCount();
     }
 }

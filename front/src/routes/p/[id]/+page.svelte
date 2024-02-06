@@ -360,6 +360,10 @@
                 {/if}
 
                 <button class="btn btn-outline">답글</button>
+
+                <div>
+                  총 {postComment.childrenCount}개의 답글
+                </div>
               </div>
             {/if}
 
