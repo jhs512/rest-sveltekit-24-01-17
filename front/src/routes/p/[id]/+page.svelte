@@ -358,6 +358,8 @@
                     onclick={() => (postComment.editing = !postComment.editing)}>수정</button
                   >
                 {/if}
+
+                <button class="btn btn-outline">답글</button>
               </div>
             {/if}
 

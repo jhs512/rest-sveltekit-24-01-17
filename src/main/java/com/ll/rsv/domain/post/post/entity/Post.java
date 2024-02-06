@@ -11,7 +11,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
@@ -128,13 +127,6 @@ public class Post extends BaseTime {
 
         decreaseCommentsCount();
     }
-
-    public Optional<PostComment> findCommentById(long postCommentId) {
-        return comments.stream()
-                .filter(it -> it.getId().equals(postCommentId))
-                .findFirst();
-    }
-
 
     public void addTag(String content) {
         tags.add(

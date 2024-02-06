@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
@@ -67,5 +69,13 @@ public class PostCommentService {
                 isNew.get() ? "임시댓글이 생성되었습니다." : "%d번 임시댓글을 불러왔습니다.".formatted(postComment.getId()),
                 postComment
         );
+    }
+
+    public List<PostComment> findByPostAndPublishedAndParentCommentOrderByIdDesc(Post post, boolean published, PostComment parentComment) {
+        return postCommentRepository.findByPostAndPublishedAndParentCommentOrderByIdDesc(post, true, parentComment);
+    }
+
+    public Optional<PostComment> findById(long id) {
+        return postCommentRepository.findById(id);
     }
 }

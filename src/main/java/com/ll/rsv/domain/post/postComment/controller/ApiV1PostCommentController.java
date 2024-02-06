@@ -51,12 +51,13 @@ public class ApiV1PostCommentController {
     public RsData<GetPostCommentsResponseBody> getPosts(
             @PathVariable long postId
     ) {
-        List<PostComment> items = postService.findById(postId)
-                .orElseThrow(GlobalException.E404::new)
-                .getComments()
-                .stream()
-                .filter(PostComment::isPublished)
-                .toList();
+        Post post = postService.findById(postId).orElseThrow(GlobalException.E404::new);
+
+        List<PostComment> items = postCommentService.findByPostAndPublishedAndParentCommentOrderByIdDesc(
+                post,
+                true,
+                null
+        );
 
         List<PostCommentDto> _items = items.stream()
                 .map(this::postCommentToDto)
@@ -79,7 +80,7 @@ public class ApiV1PostCommentController {
     ) {
         Post post = postService.findById(postId).orElseThrow(GlobalException.E404::new);
 
-        PostComment postComment = post.findCommentById(postCommentId)
+        PostComment postComment = postCommentService.findById(postCommentId)
                 .orElseThrow(GlobalException.E404::new);
 
         if (!postCommentService.canDelete(rq.getMember(), postComment))
@@ -130,7 +131,7 @@ public class ApiV1PostCommentController {
     ) {
         Post post = postService.findById(postId).orElseThrow(GlobalException.E404::new);
 
-        PostComment postComment = post.findCommentById(postCommentId)
+        PostComment postComment = postCommentService.findById(postCommentId)
                 .orElseThrow(GlobalException.E404::new);
 
         postCommentService.edit(post, postComment, body.body);

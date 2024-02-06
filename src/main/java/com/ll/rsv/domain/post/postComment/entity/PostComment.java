@@ -18,6 +18,8 @@ import static lombok.AccessLevel.PROTECTED;
 @Setter
 public class PostComment extends BaseTime {
     @ManyToOne(fetch = LAZY)
+    private PostComment parentComment;
+    @ManyToOne(fetch = LAZY)
     private Post post;
     @ManyToOne(fetch = LAZY)
     private Member author;
