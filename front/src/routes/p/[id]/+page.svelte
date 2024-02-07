@@ -6,13 +6,13 @@
   import { prettyDateTime } from '$lib/utils';
   import type { components } from '$lib/types/api/v1/schema';
 
-  const toastUiEditors = $state<Record<number, any>>({});
-
   let toastUiEditor = $state<any | undefined>();
   let writeCommentToastUiEditor = $state<any | undefined>();
+  let editCommentToastUiEditor = $state<any | undefined>();
 
   let tempPostCommentId = $state(0);
-  let post = $state() as components['schemas']['PostDto'];
+  let post = $state() as components['schemas']['PostWithBodyDto'];
+  let forEditPostComment = $state<components['schemas']['PostCommentDto']>();
 
   async function loadPost() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -124,7 +124,7 @@
   }
 
   async function submitEditCommentForm(id: number) {
-    const toastUiEditor = toastUiEditors[id];
+    const toastUiEditor = editCommentToastUiEditor;
 
     toastUiEditor.editor.setMarkdown(toastUiEditor.editor.getMarkdown().trim());
 
@@ -147,9 +147,13 @@
 
     rq.msgInfo(data!.msg);
 
-    const oldPostComment = postComments.find((e) => e.id === id)!;
-    delete toastUiEditors[id];
-    Object.assign(oldPostComment, data!.data.item);
+    console.log('forEditPostComment! : ' + JSON.stringify(forEditPostComment!));
+    console.log('data!.data.item : ' + JSON.stringify(data!.data.item));
+
+    Object.assign(forEditPostComment!, data!.data.item);
+
+    const modal = document.querySelector(`#post_comment_edit_modal_1`) as HTMLDialogElement;
+    modal.close();
   }
 
   async function makeTempPostComment() {
@@ -192,7 +196,7 @@
     postComments.unshift(data!.data.item);
     post.commentsCount++;
 
-    (window.document.querySelector('#post_comment_edit_modal_1') as HTMLDialogElement).close();
+    (window.document.querySelector('#post_comment_write_modal_1') as HTMLDialogElement).close();
   }
 
   function Post__switchTab() {
@@ -226,7 +230,7 @@
 
   function showWriteCommentForm() {
     makeTempPostComment();
-    const modal = window.document.querySelector('#post_comment_edit_modal_1') as HTMLDialogElement;
+    const modal = window.document.querySelector('#post_comment_write_modal_1') as HTMLDialogElement;
     modal.showModal();
   }
 
@@ -341,7 +345,7 @@
         {/if}
       </div>
 
-      <dialog id="post_comment_edit_modal_1" class="modal">
+      <dialog id="post_comment_write_modal_1" class="modal">
         <div class="modal-box max-w-7xl">
           <h3 class="font-bold text-lg">댓글 작성</h3>
 
@@ -369,6 +373,34 @@
         </form>
       </dialog>
 
+      <dialog id="post_comment_edit_modal_1" class="modal">
+        <div class="modal-box max-w-7xl">
+          <h3 class="font-bold text-lg">댓글 수정</h3>
+
+          {#if forEditPostComment !== undefined}
+            <form on:submit|preventDefault={() => submitEditCommentForm(forEditPostComment!.id)}>
+              <div>
+                <div>내용</div>
+                {#key forEditPostComment.id}
+                  <ToastUiEditor
+                    bind:this={editCommentToastUiEditor}
+                    body={forEditPostComment.body}
+                    saveBody={() => submitEditCommentForm(forEditPostComment!.id)}
+                  />
+                {/key}
+              </div>
+
+              <div>
+                <button class="btn btn-outline" type="submit">저장</button>
+              </div>
+            </form>
+          {/if}
+        </div>
+        <form method="dialog" class="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+
       <dialog id="post_comments_modal_1" class="modal">
         <div class="modal-box max-w-7xl">
           <h3 class="font-bold text-lg">댓글 목록</h3>
@@ -390,7 +422,7 @@
                     />
                   </div>
                   <div>
-                    {#key postComment.id}
+                    {#key `${postComment.id}__${postComment.modifyDate}`}
                       <ToastUiEditor body={postComment.body} viewer={true} />
                     {/key}
                   </div>
@@ -409,7 +441,15 @@
                       {/if}
 
                       {#if postComment.actorCanEdit}
-                        <button class="btn btn-outline">수정</button>
+                        <button
+                          class="btn btn-outline"
+                          onclick={() => {
+                          forEditPostComment = postComment;
+                          const modal = document.querySelector(`#post_comment_edit_modal_1`) as HTMLDialogElement;
+                          modal.showModal();
+                        }}
+                          >수정</button
+                        >
                       {/if}
 
                       {#if postComment.actorCanReply}
@@ -437,153 +477,6 @@
       </dialog>
     {:catch error}
       {error.msg}
-    {/await}
-
-    <hr />
-
-    <div>옛날 댓글기능 시작</div>
-
-    <div>
-      <h1 class="font-bold text-2xl">댓글작성</h1>
-
-      <form on:submit|preventDefault={submitWriteCommentForm}>
-        {#if tempPostCommentId == 0}
-          <input type="text" class="input input-bordered" onclick={() => makeTempPostComment()} />
-        {/if}
-
-        {#if tempPostCommentId > 0}
-          <div>
-            <div>내용</div>
-            {#key tempPostCommentId}
-              <ToastUiEditor
-                bind:this={writeCommentToastUiEditor}
-                body={''}
-                saveBody={() => submitWriteCommentForm()}
-              />
-            {/key}
-          </div>
-
-          <div>
-            <button class="btn btn-outline" type="submit">댓글작성</button>
-          </div>
-        {/if}
-      </form>
-    </div>
-
-    {#await loadPostComments()}
-      <div>loading...</div>
-    {:then { }}
-      <h1 class="font-bold text-2xl">댓글</h1>
-
-      <dialog id="sub_comments_modal_1" class="modal">
-        <div class="modal-box max-w-7xl">
-          <h3 class="font-bold text-lg">대댓글</h3>
-
-          <ul class="flex flex-col gap-5">
-            {#each postSubComments as postComment}
-              <li class="card bg-base-100 shadow">
-                <div class="card-body">
-                  <div>번호 : {postComment.id}</div>
-                  <div>작성 : {prettyDateTime(postComment.createDate)}</div>
-                  <div>수정 : {prettyDateTime(postComment.modifyDate)}</div>
-                  <div>작성자 : {postComment.authorName}</div>
-                  <div>
-                    <img
-                      src={postComment.authorProfileImgUrl}
-                      width="30"
-                      class="rounded-full"
-                      alt=""
-                    />
-                  </div>
-                </div>
-              </li>
-            {/each}
-          </ul>
-        </div>
-        <form method="dialog" class="modal-backdrop">
-          <button>close</button>
-        </form>
-      </dialog>
-
-      <div>
-        {#each postComments as postComment}
-          <div class="border">
-            <div>번호 : {postComment.id}</div>
-            <div>작성 : {prettyDateTime(postComment.createDate)}</div>
-            <div>수정 : {prettyDateTime(postComment.modifyDate)}</div>
-            <div>작성자 : {postComment.authorName}</div>
-            <div>
-              <img src={postComment.authorProfileImgUrl} width="30" class="rounded-full" alt="" />
-            </div>
-
-            {#if !postComment.editing}
-              <div>
-                {#key postComment.id}
-                  <ToastUiEditor body={postComment.body} viewer={true} />
-                {/key}
-              </div>
-
-              <div>
-                {#if postComment.actorCanDelete}
-                  <button
-                    class="btn btn-outline"
-                    onclick={() =>
-                      confirmAndDeletePostComment(postComment, (data) => {
-                        rq.msgInfo(data.msg);
-                        postComments.splice(postComments.indexOf(postComment), 1);
-                      })}>삭제</button
-                  >
-                {/if}
-
-                {#if postComment.actorCanEdit}
-                  <button
-                    class="btn btn-outline"
-                    onclick={() => (postComment.editing = !postComment.editing)}>수정</button
-                  >
-                {/if}
-
-                <button class="btn btn-outline">답글</button>
-
-                {#if postComment.childrenCount > 0}
-                  <div>
-                    <button class="btn" onclick={() => showPostSubComments(postComment.id)}>
-                      총 {postComment.childrenCount}개의 답글
-                    </button>
-                  </div>
-                {/if}
-              </div>
-            {/if}
-
-            {#if postComment.editing}
-              <div>
-                <form on:submit|preventDefault={() => submitEditCommentForm(postComment.id)}>
-                  <input type="hidden" name="id" value={postComment.id} />
-
-                  <div>
-                    <div>내용</div>
-                    {#key postComment.id}
-                      <ToastUiEditor
-                        bind:this={toastUiEditors[postComment.id]}
-                        body={postComment.body}
-                        saveBody={() => submitEditCommentForm(postComment.id)}
-                      />
-                    {/key}
-                  </div>
-
-                  <div>
-                    <button class="btn btn-outline" type="submit">저장</button>
-                    <button
-                      type="button"
-                      class="btn btn-outline"
-                      onclick={() => (postComment.editing = !postComment.editing)}>수정취소</button
-                    >
-                  </div>
-                </form>
-              </div>
-            {/if}
-          </div>
-        {/each}
-      </div>
     {/await}
   </div>
 </div>

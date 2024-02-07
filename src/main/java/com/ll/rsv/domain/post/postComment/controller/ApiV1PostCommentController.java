@@ -174,6 +174,7 @@ public class ApiV1PostCommentController {
                 .orElseThrow(GlobalException.E404::new);
 
         postCommentService.edit(post, postComment, body.body);
+        entityManager.flush(); // modifyDate 가 이 컨트롤러 액션이 끝나고 변경되지 않고, 지금 즉시 변경되도록 커밋을 지금 수행하도록 한다.
 
         return RsData.of(
                 "댓글이 수정되었습니다.",

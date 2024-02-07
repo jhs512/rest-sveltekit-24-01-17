@@ -8,7 +8,6 @@ import com.ll.rsv.global.jpa.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -165,10 +164,5 @@ public class Post extends BaseTime {
                 .stream()
                 .filter(it -> !hasTag(it))
                 .forEach(this::addTag);
-    }
-
-
-    public void setModified() {
-        setModifyDate(LocalDateTime.now());
     }
 }
