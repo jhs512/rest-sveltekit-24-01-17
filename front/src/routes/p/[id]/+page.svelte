@@ -7,12 +7,14 @@
   import type { components } from '$lib/types/api/v1/schema';
 
   let toastUiEditor = $state<any | undefined>();
+  let commentReplyToastUiEditor = $state<any | undefined>();
   let writeCommentToastUiEditor = $state<any | undefined>();
   let editCommentToastUiEditor = $state<any | undefined>();
 
   let tempPostCommentId = $state(0);
   let post = $state() as components['schemas']['PostWithBodyDto'];
   let forEditPostComment = $state<components['schemas']['PostCommentDto']>();
+  let forReplyPostComment = $state<components['schemas']['PostCommentDto']>();
 
   async function loadPost() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -167,6 +169,18 @@
     }, 100);
   }
 
+  async function submitCommentReplyForm() {
+    commentReplyToastUiEditor.setMarkdown(commentReplyToastUiEditor.editor.getMarkdown().trim());
+
+    if (commentReplyToastUiEditor.editor.getMarkdown().trim().length === 0) {
+      rq.msgError('내용을 입력해주세요.');
+      commentReplyToastUiEditor.editor.focus();
+      return;
+    }
+
+    (window.document.querySelector('#post_comment_write_modal_1') as HTMLDialogElement).close();
+  }
+
   async function submitWriteCommentForm() {
     writeCommentToastUiEditor.editor.setMarkdown(
       writeCommentToastUiEditor.editor.getMarkdown().trim()
@@ -227,6 +241,12 @@
       hotkeys.deleteScope('postDetail');
     };
   });
+
+  function showCommentReplyForm() {
+    makeTempPostComment();
+    const modal = window.document.querySelector('#post_comment_reply_modal_1') as HTMLDialogElement;
+    modal.showModal();
+  }
 
   function showWriteCommentForm() {
     makeTempPostComment();
@@ -373,6 +393,34 @@
         </form>
       </dialog>
 
+      <dialog id="post_comment_reply_modal_1" class="modal">
+        <div class="modal-box max-w-7xl">
+          <h3 class="font-bold text-lg">답글 작성</h3>
+
+          <form on:submit|preventDefault={submitCommentReplyForm}>
+            {#if tempPostCommentId > 0}
+              <div>
+                <div>내용</div>
+                {#key tempPostCommentId}
+                  <ToastUiEditor
+                    bind:this={commentReplyToastUiEditor}
+                    body={''}
+                    saveBody={() => submitCommentReplyForm()}
+                  />
+                {/key}
+              </div>
+
+              <div>
+                <button class="btn btn-outline" type="submit">댓글작성</button>
+              </div>
+            {/if}
+          </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+
       <dialog id="post_comment_edit_modal_1" class="modal">
         <div class="modal-box max-w-7xl">
           <h3 class="font-bold text-lg">댓글 수정</h3>
@@ -453,7 +501,7 @@
                       {/if}
 
                       {#if postComment.actorCanReply}
-                        <button class="btn btn-outline">답글</button>
+                        <button class="btn btn-outline" onclick={showCommentReplyForm}>답글</button>
                       {/if}
 
                       {#if postComment.childrenCount > 0}
