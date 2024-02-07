@@ -127,6 +127,8 @@ export interface components {
       listed: boolean;
       /** Format: int64 */
       likesCount: number;
+      /** Format: int64 */
+      commentsCount: number;
       tagContents: string[];
       actorCanRead?: boolean;
       actorCanEdit?: boolean;
@@ -199,6 +201,8 @@ export interface components {
       listed: boolean;
       /** Format: int64 */
       likesCount: number;
+      /** Format: int64 */
+      commentsCount: number;
       tagContents: string[];
       actorCanRead?: boolean;
       actorCanEdit?: boolean;

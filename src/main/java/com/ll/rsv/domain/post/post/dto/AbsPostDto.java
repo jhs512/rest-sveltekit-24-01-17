@@ -31,6 +31,8 @@ public abstract class AbsPostDto {
     @NonNull
     private long likesCount;
     @NonNull
+    private long commentsCount;
+    @NonNull
     private List<String> tagContents;
 
     @Setter
@@ -55,6 +57,7 @@ public abstract class AbsPostDto {
         this.published = post.isPublished();
         this.listed = post.isListed();
         this.likesCount = post.getLikesCount();
+        this.commentsCount = post.getCommentsCount();
         this.tagContents = post.getTagContents();
     }
 }

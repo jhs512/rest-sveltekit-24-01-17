@@ -311,9 +311,38 @@
           </div>
         </div>
       </div>
+
+      <div>새 댓글기능 시작</div>
+
+      <div class="flex flex-col">
+        <button
+          class="btn btn-link"
+          onclick={() => (window.document.querySelector('#post_comment_edit_modal_1') as HTMLDialogElement).showModal()}
+          >댓글 작성</button
+        >
+        {#if post.commentsCount > 0}
+          <button class="btn btn-link">{post.commentsCount} 개의 댓글</button>
+        {:else}
+          <div class="text-center">댓글이 없습니다.</div>
+        {/if}
+      </div>
+
+      <dialog id="post_comment_edit_modal_1" class="modal">
+        <div class="modal-box">
+          <h3 class="font-bold text-lg">댓글 작성</h3>
+          <p class="py-4">Press ESC key or click outside to close</p>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     {:catch error}
       {error.msg}
     {/await}
+
+    <hr />
+
+    <div>옛날 댓글기능 시작</div>
 
     <div>
       <h1 class="font-bold text-2xl">댓글작성</h1>
