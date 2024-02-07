@@ -30,6 +30,8 @@ public class PostCommentDto {
     private Boolean actorCanEdit;
     @Setter
     private Boolean actorCanDelete;
+    @Setter
+    private Boolean actorCanReply;
 
     // 추가적인
     private boolean editing;

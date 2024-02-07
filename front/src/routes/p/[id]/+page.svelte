@@ -223,6 +223,18 @@
       hotkeys.deleteScope('postDetail');
     };
   });
+
+  function showWriteCommentForm() {
+    makeTempPostComment();
+    const modal = window.document.querySelector('#post_comment_edit_modal_1') as HTMLDialogElement;
+    modal.showModal();
+  }
+
+  function showComments() {
+    loadPostComments();
+    const modal = window.document.querySelector('#post_comments_modal_1') as HTMLDialogElement;
+    modal.showModal();
+  }
 </script>
 
 <div class="flex-grow flex justify-center items-center">
@@ -320,16 +332,10 @@
       <div>새 댓글기능 시작</div>
 
       <div class="flex flex-col">
-        <button
-          class="btn btn-link"
-          onclick={() => {
-            (window.document.querySelector('#post_comment_edit_modal_1') as HTMLDialogElement).showModal();
-            makeTempPostComment();
-             }}
-          >댓글 작성</button
-        >
+        <button class="btn btn-link" onclick={showWriteCommentForm}>댓글 작성</button>
         {#if post.commentsCount > 0}
-          <button class="btn btn-link">{post.commentsCount} 개의 댓글</button>
+          <button class="btn btn-link" onclick={showComments}>{post.commentsCount} 개의 댓글</button
+          >
         {:else}
           <div class="text-center">댓글이 없습니다.</div>
         {/if}
@@ -358,6 +364,73 @@
             {/if}
           </form>
         </div>
+        <form method="dialog" class="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+
+      <dialog id="post_comments_modal_1" class="modal">
+        <div class="modal-box max-w-7xl">
+          <h3 class="font-bold text-lg">댓글 목록</h3>
+
+          <ul class="flex flex-col gap-5">
+            {#each postComments as postComment}
+              <li class="card bg-base-100 shadow">
+                <div class="card-body">
+                  <div>번호 : {postComment.id}</div>
+                  <div>작성 : {prettyDateTime(postComment.createDate)}</div>
+                  <div>수정 : {prettyDateTime(postComment.modifyDate)}</div>
+                  <div>작성자 : {postComment.authorName}</div>
+                  <div>
+                    <img
+                      src={postComment.authorProfileImgUrl}
+                      width="30"
+                      class="rounded-full"
+                      alt=""
+                    />
+                  </div>
+                  <div>
+                    {#key postComment.id}
+                      <ToastUiEditor body={postComment.body} viewer={true} />
+                    {/key}
+                  </div>
+                  <div>
+                    <div>
+                      {#if postComment.actorCanDelete}
+                        <button
+                          class="btn btn-outline"
+                          onclick={() =>
+                            confirmAndDeletePostComment(postComment, (data) => {
+                              rq.msgInfo(data.msg);
+                              postComments.splice(postComments.indexOf(postComment), 1);
+                              post.commentsCount--;
+                            })}>삭제</button
+                        >
+                      {/if}
+
+                      {#if postComment.actorCanEdit}
+                        <button class="btn btn-outline">수정</button>
+                      {/if}
+
+                      {#if postComment.actorCanReply}
+                        <button class="btn btn-outline">답글</button>
+                      {/if}
+
+                      {#if postComment.childrenCount > 0}
+                        <div>
+                          <button class="btn" onclick={() => showPostSubComments(postComment.id)}>
+                            총 {postComment.childrenCount}개의 답글
+                          </button>
+                        </div>
+                      {/if}
+                    </div>
+                  </div>
+                </div>
+              </li>
+            {/each}
+          </ul>
+        </div>
+
         <form method="dialog" class="modal-backdrop">
           <button>close</button>
         </form>
@@ -403,20 +476,29 @@
       <h1 class="font-bold text-2xl">댓글</h1>
 
       <dialog id="sub_comments_modal_1" class="modal">
-        <div class="modal-box">
+        <div class="modal-box max-w-7xl">
           <h3 class="font-bold text-lg">대댓글</h3>
 
-          {#each postSubComments as postComment}
-            <div class="border">
-              <div>번호 : {postComment.id}</div>
-              <div>작성 : {prettyDateTime(postComment.createDate)}</div>
-              <div>수정 : {prettyDateTime(postComment.modifyDate)}</div>
-              <div>작성자 : {postComment.authorName}</div>
-              <div>
-                <img src={postComment.authorProfileImgUrl} width="30" class="rounded-full" alt="" />
-              </div>
-            </div>
-          {/each}
+          <ul class="flex flex-col gap-5">
+            {#each postSubComments as postComment}
+              <li class="card bg-base-100 shadow">
+                <div class="card-body">
+                  <div>번호 : {postComment.id}</div>
+                  <div>작성 : {prettyDateTime(postComment.createDate)}</div>
+                  <div>수정 : {prettyDateTime(postComment.modifyDate)}</div>
+                  <div>작성자 : {postComment.authorName}</div>
+                  <div>
+                    <img
+                      src={postComment.authorProfileImgUrl}
+                      width="30"
+                      class="rounded-full"
+                      alt=""
+                    />
+                  </div>
+                </div>
+              </li>
+            {/each}
+          </ul>
         </div>
         <form method="dialog" class="modal-backdrop">
           <button>close</button>

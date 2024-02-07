@@ -186,6 +186,7 @@ public class ApiV1PostCommentController {
         PostCommentDto dto = new PostCommentDto(postComment);
         dto.setActorCanDelete(postCommentService.canDelete(rq.getMember(), postComment));
         dto.setActorCanEdit(postCommentService.canEdit(rq.getMember(), postComment));
+        dto.setActorCanReply(postCommentService.canReply(rq.getMember(), postComment));
 
         return dto;
     }

@@ -94,4 +94,11 @@ public class PostCommentService {
 
         return actor.equals(postComment.getAuthor()); // 그것도 아니라면 본인이 쓴 글이여야 함
     }
+
+    public boolean canReply(Member actor, PostComment postComment) {
+        if (postComment == null) return false;
+        if (actor == null) return false;
+
+        return postComment.isPublished();
+    }
 }
