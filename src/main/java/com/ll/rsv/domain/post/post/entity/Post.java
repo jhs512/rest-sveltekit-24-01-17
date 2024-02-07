@@ -117,7 +117,9 @@ public class Post extends BaseTime {
 
         comments.add(postComment);
 
-        increaseCommentsCount();
+        if (published) {
+            increaseCommentsCount();
+        }
 
         return postComment;
     }

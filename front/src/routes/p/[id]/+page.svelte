@@ -12,6 +12,7 @@
   let writeCommentToastUiEditor = $state<any | undefined>();
 
   let tempPostCommentId = $state(0);
+  let post = $state() as components['schemas']['PostDto'];
 
   async function loadPost() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -23,6 +24,7 @@
     if (error) throw error;
 
     Post__lastModified = data!.data.item.modifyDate;
+    post = data!.data.item;
 
     Post__loadLatestBody();
 
@@ -188,6 +190,9 @@
 
     // postComments 맨 앞에 넣고 싶어
     postComments.unshift(data!.data.item);
+    post.commentsCount++;
+
+    (window.document.querySelector('#post_comment_edit_modal_1') as HTMLDialogElement).close();
   }
 
   function Post__switchTab() {
@@ -224,7 +229,7 @@
   <div class="w-full px-2 mt-4">
     {#await loadPost()}
       <div>loading...</div>
-    {:then { data: { item: post } }}
+    {:then { }}
       <div class="card bg-base-100 shadow">
         <div class="card-body">
           <div class="detail grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-3">
@@ -317,7 +322,10 @@
       <div class="flex flex-col">
         <button
           class="btn btn-link"
-          onclick={() => (window.document.querySelector('#post_comment_edit_modal_1') as HTMLDialogElement).showModal()}
+          onclick={() => {
+            (window.document.querySelector('#post_comment_edit_modal_1') as HTMLDialogElement).showModal();
+            makeTempPostComment();
+             }}
           >댓글 작성</button
         >
         {#if post.commentsCount > 0}
@@ -328,9 +336,27 @@
       </div>
 
       <dialog id="post_comment_edit_modal_1" class="modal">
-        <div class="modal-box">
+        <div class="modal-box max-w-7xl">
           <h3 class="font-bold text-lg">댓글 작성</h3>
-          <p class="py-4">Press ESC key or click outside to close</p>
+
+          <form on:submit|preventDefault={submitWriteCommentForm}>
+            {#if tempPostCommentId > 0}
+              <div>
+                <div>내용</div>
+                {#key tempPostCommentId}
+                  <ToastUiEditor
+                    bind:this={writeCommentToastUiEditor}
+                    body={''}
+                    saveBody={() => submitWriteCommentForm()}
+                  />
+                {/key}
+              </div>
+
+              <div>
+                <button class="btn btn-outline" type="submit">댓글작성</button>
+              </div>
+            {/if}
+          </form>
         </div>
         <form method="dialog" class="modal-backdrop">
           <button>close</button>

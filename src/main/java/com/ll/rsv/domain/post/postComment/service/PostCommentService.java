@@ -35,6 +35,11 @@ public class PostCommentService {
     @Transactional
     public void edit(Post post, PostComment postComment, String body) {
         postComment.setBody(body);
+
+        if (!postComment.isPublished()) {
+            postComment.getPost().increaseCommentsCount();
+        }
+
         postComment.setPublished(true);
     }
 
