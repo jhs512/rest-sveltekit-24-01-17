@@ -11,10 +11,41 @@ toastr.options = {
   showDuration: 300,
   hideDuration: 300,
   timeOut: 3000,
-  extendedTimeOut: 1000
+  extendedTimeOut: 1000,
+  positionClass: 'toast-top-right'
 };
 
 class Rq {
+  public dialogStack: string[] = [];
+
+  public showModal(id: string) {
+    const modal = document.getElementById(id) as HTMLDialogElement;
+
+    this.dialogStack.push(id);
+
+    toastr.options.target = '#' + id;
+    toastr.options.positionClass = 'toast-center';
+
+    if (!modal.hasAttribute('data-close-listener-added')) {
+      modal.addEventListener('close', () => {
+        this.dialogStack.pop();
+
+        if (this.dialogStack.length > 0) {
+          toastr.options.target = '#' + this.dialogStack[this.dialogStack.length - 1];
+        } else {
+          toastr.options.target = 'body';
+          toastr.options.positionClass = 'toast-top-right';
+        }
+      });
+
+      modal.setAttribute('data-close-listener-added', 'true');
+    }
+
+    modal.showModal();
+
+    return modal;
+  }
+
   public member: components['schemas']['MemberDto'];
 
   constructor() {
@@ -84,11 +115,11 @@ class Rq {
   }
 
   public msgInfo(message: string) {
-    toastr.info(message);
+    toastr.info(message, '', toastr.options);
   }
 
   public msgError(message: string) {
-    toastr.error(message);
+    toastr.error(message, '', toastr.options);
   }
 
   // 인증

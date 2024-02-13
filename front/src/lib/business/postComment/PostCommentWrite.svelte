@@ -5,8 +5,7 @@
   const { post } = $props<{ post: components['schemas']['PostWithBodyDto'] }>();
 
   function showModal() {
-    const modal = document.getElementById('post_comment_write_modal') as HTMLDialogElement;
-    modal.showModal();
+    const modal = rq.showModal('post_comment_write_modal');
 
     const inputBody = modal.querySelector('form input[type=text]') as HTMLInputElement;
 
@@ -38,7 +37,7 @@
 <h2>댓글 작성</h2>
 
 <button class="link" onclick={showModal}>댓글 작성하기</button>
-<dialog id="post_comment_write_modal" class="modal">
+<dialog id="post_comment_write_modal" class="modal" style="z-index: 100 !important;">
   <div class="modal-box">
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -54,7 +53,7 @@
           type="text"
           name="body"
           placeholder="댓글을 입력해주세요."
-          class="input input-bordered"
+          class="input input-bordered w-full"
         />
       </label>
 
