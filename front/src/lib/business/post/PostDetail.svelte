@@ -6,29 +6,11 @@
   import { prettyDateTime } from '$lib/utils';
   import type { components } from '$lib/types/api/v1/schema';
 
-  let post = $state() as components['schemas']['PostWithBodyDto'];
+  const { post } = $props<{ post: components['schemas']['PostWithBodyDto'] }>();
   // 본문을 표시하기 위한 에디터(뷰어) 객체
   let toastUiEditor = $state() as any;
 
-  async function loadPost() {
-    if (import.meta.env.SSR) throw new Error('CSR ONLY');
-
-    const { data, error } = await rq
-      .apiEndPoints()
-      .GET('/api/v1/posts/{id}', { params: { path: { id: parseInt($page.params.id) } } });
-
-    if (error) throw error;
-
-    Post__lastModified = data!.data.item.modifyDate;
-    post = data!.data.item;
-
-    // 본문 표시
-    Post__loadLatestBody();
-
-    return data!;
-  }
-
-  let Post__lastModified = '';
+  let Post__lastModified = post.modifyDate;
 
   async function Post__loadLatestBody() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
@@ -70,6 +52,8 @@
   }
 
   rq.effect(() => {
+    Post__loadLatestBody();
+
     hotkeys.filter = function (event) {
       return true;
     };
@@ -94,104 +78,98 @@
 
 <div class="flex-grow flex justify-center items-center">
   <div class="w-full px-2 mt-4">
-    {#await loadPost()}
-      <div>loading...</div>
-    {:then { }}
-      <div class="card bg-base-100 shadow">
-        <div class="card-body">
-          <div class="detail grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-3">
-            <div class="form-control">
-              <!-- svelte-ignore a11y-label-has-associated-control -->
-              <label class="label">
-                <span class="label-text">번호</span>
-              </label>
-              <div>{post.id}</div>
-            </div>
+    <div class="card bg-base-100 shadow">
+      <div class="card-body">
+        <div class="detail grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-3">
+          <div class="form-control">
+            <!-- svelte-ignore a11y-label-has-associated-control -->
+            <label class="label">
+              <span class="label-text">번호</span>
+            </label>
+            <div>{post.id}</div>
+          </div>
 
-            <div class="form-control">
-              <!-- svelte-ignore a11y-label-has-associated-control -->
-              <label class="label">
-                <span class="label-text">작성일</span>
-              </label>
-              <div>{prettyDateTime(post.createDate)}</div>
-            </div>
+          <div class="form-control">
+            <!-- svelte-ignore a11y-label-has-associated-control -->
+            <label class="label">
+              <span class="label-text">작성일</span>
+            </label>
+            <div>{prettyDateTime(post.createDate)}</div>
+          </div>
 
-            <div class="form-control">
-              <!-- svelte-ignore a11y-label-has-associated-control -->
-              <label class="label">
-                <span class="label-text">작성자</span>
-              </label>
-              <div>{post.authorName}</div>
-            </div>
+          <div class="form-control">
+            <!-- svelte-ignore a11y-label-has-associated-control -->
+            <label class="label">
+              <span class="label-text">작성자</span>
+            </label>
+            <div>{post.authorName}</div>
+          </div>
 
-            <div class="form-control">
-              <!-- svelte-ignore a11y-label-has-associated-control -->
-              <label class="label">
-                <span class="label-text">공개여부</span>
-              </label>
-              {#if post.published}
-                <i class="fa-regular fa-eye"></i>
-              {:else}
-                <i class="fa-regular fa-eye-slash"></i>
-              {/if}
-            </div>
+          <div class="form-control">
+            <!-- svelte-ignore a11y-label-has-associated-control -->
+            <label class="label">
+              <span class="label-text">공개여부</span>
+            </label>
+            {#if post.published}
+              <i class="fa-regular fa-eye"></i>
+            {:else}
+              <i class="fa-regular fa-eye-slash"></i>
+            {/if}
+          </div>
 
-            <div class="form-control col-span-full">
-              <!-- svelte-ignore a11y-label-has-associated-control -->
-              <label class="label">
-                <span class="label-text">제목</span>
-              </label>
-              <div>
-                {post.title}
-                <div class="tooltip tooltip-right" data-tip="Ctrl + d, Cmd + d">
-                  <button class="btn btn-sm" on:click={() => toastUiEditor.toggleFullScreen()}
-                    >전체화면</button
-                  >
-                </div>
+          <div class="form-control col-span-full">
+            <!-- svelte-ignore a11y-label-has-associated-control -->
+            <label class="label">
+              <span class="label-text">제목</span>
+            </label>
+            <div>
+              {post.title}
+              <div class="tooltip tooltip-right" data-tip="Ctrl + d, Cmd + d">
+                <button class="btn btn-sm" on:click={() => toastUiEditor.toggleFullScreen()}
+                  >전체화면</button
+                >
               </div>
             </div>
+          </div>
 
-            <div class="flex gap-2">
-              {#if post.actorCanDelete}
-                <button
-                  class="btn btn-outline"
-                  onclick={() => rq.confirmAndDeletePost(post, '/p/list')}>삭제</button
-                >
-              {/if}
+          <div class="flex gap-2">
+            {#if post.actorCanDelete}
+              <button
+                class="btn btn-outline"
+                onclick={() => rq.confirmAndDeletePost(post, '/p/list')}>삭제</button
+              >
+            {/if}
 
-              {#if post.actorCanEdit}
-                <a class="btn btn-outline" href="/p/{post.id}/edit">수정</a>
-              {/if}
-            </div>
+            {#if post.actorCanEdit}
+              <a class="btn btn-outline" href="/p/{post.id}/edit">수정</a>
+            {/if}
+          </div>
 
-            <div class="form-control col-span-full">
-              <!-- svelte-ignore a11y-label-has-associated-control -->
-              <label class="label">
-                <span class="label-text">내용</span>
-              </label>
+          <div class="form-control col-span-full">
+            <!-- svelte-ignore a11y-label-has-associated-control -->
+            <label class="label">
+              <span class="label-text">내용</span>
+            </label>
 
-              {#key post.id}
-                <ToastUiEditor bind:this={toastUiEditor} body={post.body} viewer={true}>
-                  <div slot="beforeContent" class="visible-on-fullscreen">
-                    <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <h1>
-                      {post.title},
-                      <div class="tooltip tooltip-right" data-tip="Ctrl + d, Cmd + d">
-                        <button class="btn btn-sm" on:click={() => toastUiEditor.toggleFullScreen()}
-                          >전체화면</button
-                        >
-                      </div>
-                    </h1>
-                  </div>
-                </ToastUiEditor>
-              {/key}
-            </div>
+            {#key post.id}
+              <ToastUiEditor bind:this={toastUiEditor} body={post.body} viewer={true}>
+                <div slot="beforeContent" class="visible-on-fullscreen">
+                  <!-- svelte-ignore a11y-click-events-have-key-events -->
+                  <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                  <h1>
+                    {post.title},
+                    <div class="tooltip tooltip-right" data-tip="Ctrl + d, Cmd + d">
+                      <button class="btn btn-sm" on:click={() => toastUiEditor.toggleFullScreen()}
+                        >전체화면</button
+                      >
+                    </div>
+                  </h1>
+                </div>
+              </ToastUiEditor>
+            {/key}
           </div>
         </div>
       </div>
-    {:catch error}
-      {error.msg}
-    {/await}
+    </div>
   </div>
 </div>
