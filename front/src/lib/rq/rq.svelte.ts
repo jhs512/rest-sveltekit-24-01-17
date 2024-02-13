@@ -60,6 +60,14 @@ class Rq {
     });
   }
 
+  public apiEndPointsWithFetch(fetch: any) {
+    return createClient<paths>({
+      baseUrl: import.meta.env.VITE_CORE_API_BASE_URL,
+      credentials: 'include',
+      fetch
+    });
+  }
+
   // MSG, REDIRECT
   public msgAndRedirect(
     data: { msg: string } | undefined,
