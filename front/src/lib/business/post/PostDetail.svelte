@@ -6,7 +6,9 @@
   import { prettyDateTime } from '$lib/utils';
   import type { components } from '$lib/types/api/v1/schema';
 
-  const { post } = $props<{ post: components['schemas']['PostWithBodyDto'] }>();
+  const { post } = $props<{
+    post: components['schemas']['PostWithBodyDto'];
+  }>();
   // 본문을 표시하기 위한 에디터(뷰어) 객체
   let toastUiEditor = $state() as any;
 
