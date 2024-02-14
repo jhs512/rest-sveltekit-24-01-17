@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { components } from '$lib/types/api/v1/schema';
   import PostDetail from '$lib/business/post/PostDetail.svelte';
   import PostCommentWriteAndList from '$lib/business/postComment/PostCommentWriteAndList.svelte';
+  import type { components } from '$lib/types/api/v1/schema';
 
   const { data } = $props<{ data: { post: components['schemas']['PostWithBodyDto'] } }>();
   const { post } = data;

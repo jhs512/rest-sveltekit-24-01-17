@@ -3,9 +3,9 @@
   import type { components } from '$lib/types/api/v1/schema';
   import PostCommentEditModal from './PostCommentEditModal.svelte';
 
-  const { post, postComments } = $props<{
+  const { post, addPostComment } = $props<{
     post: components['schemas']['PostWithBodyDto'];
-    postComments: components['schemas']['PostCommentDto'][];
+    addPostComment: (postComment: components['schemas']['PostCommentDto']) => void;
   }>();
   const title = `글 "${post.title}" 에 대한 댓글`;
   let postComment = $state<components['schemas']['PostCommentDto'] | undefined>();
@@ -42,7 +42,7 @@
       }
     });
 
-    postComments.push(data!.data.item);
+    addPostComment(data!.data.item);
 
     return data!.msg;
   }

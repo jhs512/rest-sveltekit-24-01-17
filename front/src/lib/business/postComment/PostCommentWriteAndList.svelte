@@ -11,6 +11,10 @@
   }>();
   let postComments = $state<components['schemas']['PostCommentDto'][]>([]);
 
+  function addPostComment(postComment: components['schemas']['PostCommentDto']) {
+    postComments.unshift(postComment);
+  }
+
   async function loadPostComments() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
@@ -33,7 +37,7 @@
 {#await loadPostComments()}
   loading...
 {:then}
-  <PostCommentWrite {post} {postComments} />
+  <PostCommentWrite {post} {addPostComment} />
   <PostCommentList {post} {postComments} />
 {:catch error}
   {error.msg}
