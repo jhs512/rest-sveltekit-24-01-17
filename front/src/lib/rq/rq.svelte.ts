@@ -28,14 +28,10 @@ class Rq {
 
     if (!modal.hasAttribute('data-close-listener-added')) {
       modal.addEventListener('close', () => {
-        this.dialogStack.pop();
-
-        if (this.dialogStack.length > 0) {
-          toastr.options.target = '#' + this.dialogStack[this.dialogStack.length - 1];
-        } else {
-          toastr.options.target = 'body';
-          toastr.options.positionClass = 'toast-top-right';
-        }
+        // hideModal 함수에서 modalClosed 함수를 호출한다.
+        // 그런데 여기서 이렇게 close 이벤트를 추가하는 이유는 무엇일까?
+        // 그것은 hideModal 함수에 의해서가 아니라 다른 방법으로 modal 이 닫힐 수도 있기 때문이다.
+        this.modalClosed(id);
       });
 
       modal.setAttribute('data-close-listener-added', 'true');
@@ -44,6 +40,33 @@ class Rq {
     modal.showModal();
 
     return modal;
+  }
+
+  public hideModal(id: string) {
+    const modal = document.getElementById(id) as HTMLDialogElement;
+
+    modal.close();
+
+    this.modalClosed(id);
+  }
+
+  // 모달이 닫힐 때마다 수행되어야 하는 작업을 여기에 추가한다.
+  // 이렇게 함수로 따로 분리한 이유는
+  // 모달 close 를 했을 때 그게 즉각적으로 닫히는게 아니라 천천히 닫힌다.
+  // 그래서 아래 함수를 먼저 호출 할 수 있도록 이렇게 분리를 했다.
+  // 중복 수행되어도 문제없도록 멱등성있게 구현했다.
+  public modalClosed(id: string) {
+    // 멱등성 처리
+    if (this.dialogStack[this.dialogStack.length - 1] !== id) return;
+
+    this.dialogStack.pop();
+
+    if (this.dialogStack.length > 0) {
+      toastr.options.target = '#' + this.dialogStack[this.dialogStack.length - 1];
+    } else {
+      toastr.options.target = 'body';
+      toastr.options.positionClass = 'toast-top-right';
+    }
   }
 
   public member: components['schemas']['MemberDto'];

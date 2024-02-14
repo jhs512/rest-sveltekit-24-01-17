@@ -9,16 +9,14 @@
 
     const inputBody = modal.querySelector('form input[type=text]') as HTMLInputElement;
 
-    //inputBody.value = '';
     inputBody.focus();
   }
 
   function hideModal() {
-    const modal = document.getElementById('post_comment_write_modal') as HTMLDialogElement;
-    modal.close();
+    rq.hideModal('post_comment_write_modal');
   }
 
-  function submitWriteForm(this: HTMLFormElement) {
+  async function submitWriteForm(this: HTMLFormElement) {
     const form = this;
 
     form.body.value = form.body.value.trim();
@@ -30,7 +28,37 @@
       return;
     }
 
+    const { data: tempRsData } = await rq
+      .apiEndPoints()
+      .POST('/api/v1/postComments/{postId}/temp', {
+        params: {
+          path: {
+            postId: post.id
+          }
+        }
+      });
+
+    const postCommentId = tempRsData!.data.item.id;
+
+    const { data: putRsData } = await rq
+      .apiEndPoints()
+      .PUT('/api/v1/postComments/{postId}/{postCommentId}', {
+        params: {
+          path: {
+            postId: post.id,
+            postCommentId
+          }
+        },
+        body: {
+          body: form.body.value
+        }
+      });
+
+    form.body.value = '';
+
     hideModal();
+
+    rq.msgInfo(putRsData!.msg);
   }
 </script>
 
