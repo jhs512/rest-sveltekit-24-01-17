@@ -64,10 +64,10 @@ public class NotProd {
                 PostComment postComment9 = post1.addComment(memberUser3, "댓글 9");
                 PostComment postComment10 = post1.addComment(memberUser4, "댓글 10");
 
-                postComment10.addComment(memberUser1, "대댓글 1");
-                postComment10.addComment(memberUser1, "대댓글 2");
-                postComment10.addComment(memberUser2, "대댓글 3");
-                postComment10.addComment(memberUser2, "대댓글 4");
+                postComment10.addComment(memberUser1, "답글 1");
+                postComment10.addComment(memberUser1, "답글 2");
+                postComment10.addComment(memberUser2, "답글 3");
+                postComment10.addComment(memberUser2, "답글 4");
 
                 post1.addTag("자바");
                 post1.addTag("스프링");

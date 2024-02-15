@@ -38,19 +38,30 @@ public class PostComment extends BaseTime {
     private boolean published;
     private String body;
 
-
     public void addComment(Member author, String body) {
+        addComment(author, body, true);
+    }
+
+    public PostComment addComment(Member author, String body, boolean published) {
         PostComment comment = PostComment.builder()
                 .parentComment(this)
                 .post(post)
                 .author(author)
                 .body(body)
-                .published(true)
+                .published(published)
                 .build();
         this.children.add(comment);
 
-        childrenCount++;
+        if (published) childrenCount++;
 
-        post.increaseCommentsCount();
+        return comment;
+    }
+
+    public boolean isReply() {
+        return parentComment != null;
+    }
+
+    public void increaseChildrenCount() {
+        childrenCount++;
     }
 }

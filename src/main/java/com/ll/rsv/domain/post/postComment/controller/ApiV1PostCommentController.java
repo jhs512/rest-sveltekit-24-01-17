@@ -133,13 +133,13 @@ public class ApiV1PostCommentController {
     }
 
 
-    public record WriteCommentResponseBody(@NonNull PostCommentDto item) {
+    public record MakeTempCommentResponseBody(@NonNull PostCommentDto item) {
     }
 
     @PostMapping(value = "/{postId}/temp", consumes = ALL_VALUE)
     @Operation(summary = "임시 댓글 생성")
     @Transactional
-    public RsData<WriteCommentResponseBody> makeTemp(
+    public RsData<MakeTempCommentResponseBody> makeTemp(
             @PathVariable long postId
     ) {
         Post post = postService.findById(postId).orElseThrow(GlobalException.E404::new);
@@ -149,7 +149,30 @@ public class ApiV1PostCommentController {
         entityManager.flush();
 
         return findTempOrMakeRsData.newDataOf(
-                new WriteCommentResponseBody(postCommentToDto(findTempOrMakeRsData.getData()))
+                new MakeTempCommentResponseBody(postCommentToDto(findTempOrMakeRsData.getData()))
+        );
+    }
+
+
+    public record MakeTempReplyCommentResponseBody(@NonNull PostCommentDto item) {
+    }
+
+    @PostMapping(value = "/{postId}/{postCommentId}/temp", consumes = ALL_VALUE)
+    @Operation(summary = "임시 답글 생성")
+    @Transactional
+    public RsData<MakeTempReplyCommentResponseBody> makeTemp(
+            @PathVariable long postId,
+            @PathVariable long postCommentId
+    ) {
+        Post post = postService.findById(postId).orElseThrow(GlobalException.E404::new);
+        PostComment parentComment = postCommentService.findById(postCommentId).orElseThrow(GlobalException.E404::new);
+
+        RsData<PostComment> findTempOrMakeRsData = postCommentService.findTempReplyOrMake(rq.getMember(), post, parentComment);
+
+        entityManager.flush();
+
+        return findTempOrMakeRsData.newDataOf(
+                new MakeTempReplyCommentResponseBody(postCommentToDto(findTempOrMakeRsData.getData()))
         );
     }
 
@@ -166,7 +189,7 @@ public class ApiV1PostCommentController {
     public RsData<EditCommentResponseBody> edit(
             @PathVariable long postId,
             @PathVariable long postCommentId,
-            @Valid @RequestBody ApiV1PostCommentController.EditCommentRequestBody body
+            @Valid @RequestBody EditCommentRequestBody body
     ) {
         Post post = postService.findById(postId).orElseThrow(GlobalException.E404::new);
 

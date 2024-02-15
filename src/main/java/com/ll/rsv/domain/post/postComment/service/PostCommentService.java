@@ -26,8 +26,8 @@ public class PostCommentService {
     }
 
     @Transactional
-    public PostComment write(Member author, Post post, String body, boolean published) {
-        PostComment postComment = post.addComment(author, body, published);
+    public PostComment write(Member author, Post post, PostComment parentComment, String body, boolean published) {
+        PostComment postComment = parentComment == null ? post.addComment(author, body, published) : parentComment.addComment(author, body, published);
 
         return postComment;
     }
@@ -37,7 +37,12 @@ public class PostCommentService {
         postComment.setBody(body);
 
         if (!postComment.isPublished()) {
-            postComment.getPost().increaseCommentsCount();
+            if ( postComment.isReply() ) {
+                postComment.getParentComment().increaseChildrenCount();
+            }
+            else {
+                postComment.getPost().increaseCommentsCount();
+            }
         }
 
         postComment.setPublished(true);
@@ -57,17 +62,40 @@ public class PostCommentService {
         return actor.equals(postComment.getAuthor());
     }
 
-    public RsData<PostComment> findTempOrMake(Member author, Post post) {
+    @Transactional
+    public RsData<PostComment> findTempReplyOrMake(Member author, Post post, PostComment parentComment) {
         AtomicBoolean isNew = new AtomicBoolean(false);
 
-        PostComment postComment = postCommentRepository.findTop1ByPostAndAuthorAndPublishedAndBodyOrderByIdDesc(
+        PostComment postComment = postCommentRepository.findTop1ByPostAndAuthorAndParentCommentAndPublishedAndBodyOrderByIdDesc(
                 post,
                 author,
+                parentComment,
                 false,
                 ""
         ).orElseGet(() -> {
             isNew.set(true);
-            return write(author, post, "", false);
+            return write(author, post, parentComment, "", false);
+        });
+
+        return RsData.of(
+                isNew.get() ? "임시답글이 생성되었습니다." : "%d번 임시답글을 불러왔습니다.".formatted(postComment.getId()),
+                postComment
+        );
+    }
+
+    @Transactional
+    public RsData<PostComment> findTempOrMake(Member author, Post post) {
+        AtomicBoolean isNew = new AtomicBoolean(false);
+
+        PostComment postComment = postCommentRepository.findTop1ByPostAndAuthorAndParentCommentAndPublishedAndBodyOrderByIdDesc(
+                post,
+                author,
+                null,
+                false,
+                ""
+        ).orElseGet(() -> {
+            isNew.set(true);
+            return write(author, post, null, "", false);
         });
 
         return RsData.of(

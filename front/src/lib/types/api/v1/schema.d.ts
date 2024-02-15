@@ -43,9 +43,13 @@ export interface paths {
     /** 임시 글 생성 */
     post: operations["makeTemp"];
   };
+  "/api/v1/postComments/{postId}/{postCommentId}/temp": {
+    /** 임시 답글 생성 */
+    post: operations["makeTemp_1"];
+  };
   "/api/v1/postComments/{postId}/temp": {
     /** 임시 댓글 생성 */
-    post: operations["makeTemp_1"];
+    post: operations["makeTemp_2"];
   };
   "/api/v1/members/logout": {
     /** 로그아웃 */
@@ -228,15 +232,25 @@ export interface components {
       msg: string;
       data: components["schemas"]["MakeTempResponseBody"];
     };
-    RsDataWriteCommentResponseBody: {
+    MakeTempReplyCommentResponseBody: {
+      item: components["schemas"]["PostCommentDto"];
+    };
+    RsDataMakeTempReplyCommentResponseBody: {
       resultCode: string;
       /** Format: int32 */
       statusCode: number;
       msg: string;
-      data: components["schemas"]["WriteCommentResponseBody"];
+      data: components["schemas"]["MakeTempReplyCommentResponseBody"];
     };
-    WriteCommentResponseBody: {
+    MakeTempCommentResponseBody: {
       item: components["schemas"]["PostCommentDto"];
+    };
+    RsDataMakeTempCommentResponseBody: {
+      resultCode: string;
+      /** Format: int32 */
+      statusCode: number;
+      msg: string;
+      data: components["schemas"]["MakeTempCommentResponseBody"];
     };
     LoginRequestBody: {
       username: string;
@@ -705,8 +719,31 @@ export interface operations {
       };
     };
   };
-  /** 임시 댓글 생성 */
+  /** 임시 답글 생성 */
   makeTemp_1: {
+    parameters: {
+      path: {
+        postId: number;
+        postCommentId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["RsDataMakeTempReplyCommentResponseBody"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "application/json": components["schemas"]["RsDataEmpty"];
+        };
+      };
+    };
+  };
+  /** 임시 댓글 생성 */
+  makeTemp_2: {
     parameters: {
       path: {
         postId: number;
@@ -716,7 +753,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": components["schemas"]["RsDataWriteCommentResponseBody"];
+          "application/json": components["schemas"]["RsDataMakeTempCommentResponseBody"];
         };
       };
       /** @description Bad Request */

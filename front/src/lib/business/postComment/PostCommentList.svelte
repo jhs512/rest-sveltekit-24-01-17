@@ -15,6 +15,7 @@
   let forModifyPostComment = $state<components['schemas']['PostCommentDto'] | undefined>();
   let forModifyPostCommentEditModal = $state() as any;
 
+  let forReplyParentPostComment = $state<components['schemas']['PostCommentDto'] | undefined>();
   let forReplyPostComment = $state<components['schemas']['PostCommentDto'] | undefined>();
   let forReplyPostCommentEditModal = $state() as any;
 
@@ -64,23 +65,25 @@
     return data!.msg;
   }
 
-  async function loadTempPostComment() {
+  async function loadTempPostComment(parentComment: components['schemas']['PostCommentDto']) {
     const { data: tempRsData } = await rq
       .apiEndPoints()
-      .POST('/api/v1/postComments/{postId}/temp', {
+      .POST('/api/v1/postComments/{postId}/{postCommentId}/temp', {
         params: {
           path: {
-            postId: post.id
+            postId: post.id,
+            postCommentId: parentComment!.id
           }
         }
       });
 
+    forReplyParentPostComment = parentComment;
     forReplyPostComment = tempRsData!.data.item;
     forReplyPostComment.body = '';
   }
 
-  async function startReply() {
-    await loadTempPostComment();
+  async function startReply(parentComment: components['schemas']['PostCommentDto']) {
+    await loadTempPostComment(parentComment);
 
     forReplyPostCommentEditModal.showModal();
   }
@@ -118,7 +121,7 @@
             {/if}
 
             {#if postComment.actorCanReply}
-              <button class="btn btn-outline" onclick={startReply}>답글</button>
+              <button class="btn btn-outline" onclick={() => startReply(postComment)}>답글</button>
             {/if}
 
             {#if postComment.childrenCount > 0}
@@ -146,12 +149,12 @@
   />
 {/if}
 
-{#if forReplyPostComment}
+{#if forReplyPostComment && forReplyParentPostComment}
   <PostCommentEditModal
     bind:this={forReplyPostCommentEditModal}
     {post}
     postComment={forReplyPostComment}
-    title={`답글`}
+    title={`댓글 "${forReplyParentPostComment.body}" 에 대한 답글`}
     {save}
     submitBtnText="답글 작성"
   />
