@@ -2,7 +2,9 @@
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
 
-  const { post, postComment, title, save } = $props<{
+  const modalId = `post_comment_write_modal_${Math.random().toString(36).substring(2, 9)}`;
+
+  const { post, postComment, title, save, submitBtnText } = $props<{
     save: (
       post: components['schemas']['PostWithBodyDto'],
       postComment: components['schemas']['PostCommentDto'],
@@ -11,10 +13,11 @@
     title: string;
     post: components['schemas']['PostWithBodyDto'];
     postComment: components['schemas']['PostCommentDto'];
+    submitBtnText: string;
   }>();
 
   export function showModal() {
-    const modal = rq.showModal('post_comment_write_modal');
+    const modal = rq.showModal(modalId);
 
     const inputBody = modal.querySelector('form input[type=text]') as HTMLInputElement;
 
@@ -22,7 +25,7 @@
   }
 
   function hideModal() {
-    rq.hideModal('post_comment_write_modal');
+    rq.hideModal(modalId);
   }
 
   async function submitWriteForm(this: HTMLFormElement) {
@@ -47,7 +50,7 @@
   }
 </script>
 
-<dialog id="post_comment_write_modal" class="modal">
+<dialog id={modalId} class="modal">
   <div class="modal-box">
     <form method="dialog">
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -70,7 +73,7 @@
 
       <div class="grid grid-cols-2 gap-4">
         <button class="btn btn-outline" type="button" onclick={hideModal}>취소</button>
-        <button class="btn btn-primary" type="submit">댓글 작성</button>
+        <button class="btn btn-primary" type="submit">{submitBtnText}</button>
       </div>
     </form>
   </div>

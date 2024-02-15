@@ -59,5 +59,12 @@
 <button class="link" onclick={startWrite}>댓글 작성하기</button>
 
 {#if postComment}
-  <PostCommentEditModal bind:this={postCommentEditModal} {post} {postComment} {title} {save} />
+  <PostCommentEditModal
+    bind:this={postCommentEditModal}
+    {post}
+    {postComment}
+    {title}
+    {save}
+    submitBtnText={'댓글 작성'}
+  />
 {/if}

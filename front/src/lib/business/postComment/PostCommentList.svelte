@@ -118,8 +118,9 @@
       bind:this={postCommentEditModal}
       {post}
       postComment={forEditPostComment}
-      title="댓글 수정"
+      title={`글 "${post.title}" 에 대한 댓글 수정`}
       {save}
+      submitBtnText="댓글 수정"
     />
   {/key}
 {/if}
