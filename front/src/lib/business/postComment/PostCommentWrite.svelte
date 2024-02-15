@@ -23,6 +23,7 @@
       });
 
     postComment = tempRsData!.data.item;
+    postComment.body = '';
   }
 
   async function save(

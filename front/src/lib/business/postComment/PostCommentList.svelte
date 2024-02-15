@@ -12,8 +12,11 @@
     modifyPostComment: (postComment: components['schemas']['PostCommentDto']) => void;
   }>();
 
-  let forEditPostComment = $state<components['schemas']['PostCommentDto'] | undefined>();
-  let postCommentEditModal = $state() as any;
+  let forModifyPostComment = $state<components['schemas']['PostCommentDto'] | undefined>();
+  let forModifyPostCommentEditModal = $state() as any;
+
+  let forReplyPostComment = $state<components['schemas']['PostCommentDto'] | undefined>();
+  let forReplyPostCommentEditModal = $state() as any;
 
   async function confirmAndDeletePostComment(postComment: components['schemas']['PostCommentDto']) {
     if (!confirm('삭제하시겠습니까?')) return;
@@ -34,9 +37,9 @@
   }
 
   function showEditModal(postComment: components['schemas']['PostCommentDto']) {
-    forEditPostComment = postComment;
+    forModifyPostComment = postComment;
 
-    postCommentEditModal.showModal();
+    forModifyPostCommentEditModal.showModal();
   }
 
   async function save(
@@ -59,6 +62,27 @@
     modifyPostComment(data!.data.item);
 
     return data!.msg;
+  }
+
+  async function loadTempPostComment() {
+    const { data: tempRsData } = await rq
+      .apiEndPoints()
+      .POST('/api/v1/postComments/{postId}/temp', {
+        params: {
+          path: {
+            postId: post.id
+          }
+        }
+      });
+
+    forReplyPostComment = tempRsData!.data.item;
+    forReplyPostComment.body = '';
+  }
+
+  async function startReply() {
+    await loadTempPostComment();
+
+    forReplyPostCommentEditModal.showModal();
   }
 </script>
 
@@ -94,7 +118,7 @@
             {/if}
 
             {#if postComment.actorCanReply}
-              <button class="btn btn-outline">답글</button>
+              <button class="btn btn-outline" onclick={startReply}>답글</button>
             {/if}
 
             {#if postComment.childrenCount > 0}
@@ -111,13 +135,24 @@
   {/each}
 </ul>
 
-{#if forEditPostComment}
+{#if forModifyPostComment}
   <PostCommentEditModal
-    bind:this={postCommentEditModal}
+    bind:this={forModifyPostCommentEditModal}
     {post}
-    postComment={forEditPostComment}
+    postComment={forModifyPostComment}
     title={`글 "${post.title}" 에 대한 댓글 수정`}
     {save}
     submitBtnText="댓글 수정"
+  />
+{/if}
+
+{#if forReplyPostComment}
+  <PostCommentEditModal
+    bind:this={forReplyPostCommentEditModal}
+    {post}
+    postComment={forReplyPostComment}
+    title={`답글`}
+    {save}
+    submitBtnText="답글 작성"
   />
 {/if}
