@@ -25,6 +25,8 @@ public class PostCommentDto {
     private String body;
     @NonNull
     private long childrenCount;
+    @NonNull
+    private long parentCommentId;
 
     @Setter
     private Boolean actorCanEdit;
@@ -32,9 +34,6 @@ public class PostCommentDto {
     private Boolean actorCanDelete;
     @Setter
     private Boolean actorCanReply;
-
-    // 추가적인
-    private boolean editing;
 
     public PostCommentDto(PostComment postComment) {
         this.id = postComment.getId();
@@ -45,5 +44,6 @@ public class PostCommentDto {
         this.authorProfileImgUrl = postComment.getAuthor().getProfileImgUrlOrDefault();
         this.body = postComment.getBody();
         this.childrenCount = postComment.getChildrenCount();
+        this.parentCommentId = postComment.getParentComment() == null ? 0 : postComment.getParentComment().getId();
     }
 }

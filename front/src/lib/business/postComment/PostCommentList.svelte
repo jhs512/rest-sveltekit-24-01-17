@@ -5,11 +5,18 @@
   import { prettyDateTime } from '$lib/utils';
   import PostCommentEditModal from './PostCommentEditModal.svelte';
 
-  const { post, postComments, deletePostComment, modifyPostComment } = $props<{
+  const {
+    post,
+    postComments,
+    deletePostComment,
+    modifyPostComment,
+    increasePostCommentChildrenCount
+  } = $props<{
     post: components['schemas']['PostWithBodyDto'];
     postComments: components['schemas']['PostCommentDto'][];
     deletePostComment: (postComment: components['schemas']['PostCommentDto']) => void;
     modifyPostComment: (postComment: components['schemas']['PostCommentDto']) => void;
+    increasePostCommentChildrenCount(postCommentId: number): void;
   }>();
 
   let forModifyPostComment = $state<components['schemas']['PostCommentDto'] | undefined>();
@@ -43,7 +50,29 @@
     forModifyPostCommentEditModal.showModal();
   }
 
-  async function save(
+  async function saveReplyPostComment(
+    post: components['schemas']['PostWithBodyDto'],
+    postComment: components['schemas']['PostCommentDto'],
+    body: string
+  ) {
+    const { data } = await rq.apiEndPoints().PUT('/api/v1/postComments/{postId}/{postCommentId}', {
+      params: {
+        path: {
+          postId: post.id,
+          postCommentId: postComment.id
+        }
+      },
+      body: {
+        body
+      }
+    });
+
+    increasePostCommentChildrenCount(data!.data.item.parentCommentId);
+
+    return data!.msg;
+  }
+
+  async function savePostComment(
     post: components['schemas']['PostWithBodyDto'],
     postComment: components['schemas']['PostCommentDto'],
     body: string
@@ -144,7 +173,7 @@
     {post}
     postComment={forModifyPostComment}
     title={`글 "${post.title}" 에 대한 댓글 수정`}
-    {save}
+    save={savePostComment}
     submitBtnText="댓글 수정"
   />
 {/if}
@@ -155,7 +184,7 @@
     {post}
     postComment={forReplyPostComment}
     title={`댓글 "${forReplyParentPostComment.body}" 에 대한 답글`}
-    {save}
+    save={saveReplyPostComment}
     submitBtnText="답글 작성"
   />
 {/if}

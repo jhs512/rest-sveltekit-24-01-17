@@ -28,6 +28,12 @@
     postComments[idx] = postComment;
   }
 
+  function increasePostCommentChildrenCount(postCommentId: number) {
+    const idx = postComments.findIndex((v) => v.id == postCommentId);
+
+    postComments[idx].childrenCount++;
+  }
+
   async function loadPostComments() {
     if (import.meta.env.SSR) throw new Error('CSR ONLY');
 
@@ -51,7 +57,13 @@
   loading...
 {:then}
   <PostCommentWrite {post} {addPostComment} />
-  <PostCommentList {post} {postComments} {deletePostComment} {modifyPostComment} />
+  <PostCommentList
+    {post}
+    {postComments}
+    {deletePostComment}
+    {modifyPostComment}
+    {increasePostCommentChildrenCount}
+  />
 {:catch error}
   {error.msg}
 {/await}

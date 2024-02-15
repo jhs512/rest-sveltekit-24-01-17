@@ -171,10 +171,11 @@ export interface components {
       body: string;
       /** Format: int64 */
       childrenCount: number;
+      /** Format: int64 */
+      parentCommentId: number;
       actorCanEdit?: boolean;
       actorCanDelete?: boolean;
       actorCanReply?: boolean;
-      editing?: boolean;
     };
     RsDataEditCommentResponseBody: {
       resultCode: string;
