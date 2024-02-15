@@ -4,6 +4,7 @@
   import type { components } from '$lib/types/api/v1/schema';
   import { prettyDateTime } from '$lib/utils';
   import PostCommentEditModal from './PostCommentEditModal.svelte';
+  import PostCommentChildrenModal from './PostCommentChildrenModal.svelte';
 
   const {
     post,
@@ -68,6 +69,7 @@
     });
 
     increasePostCommentChildrenCount(data!.data.item.parentCommentId);
+    addPostCommentChild(data!.data.item);
 
     return data!.msg;
   }
@@ -116,6 +118,26 @@
 
     forReplyPostCommentEditModal.showModal();
   }
+
+  let postCommentChildrenModal = $state() as any;
+  let forChildrenPostComment = $state<components['schemas']['PostCommentDto'] | undefined>();
+  let postCommentChildren = $state<components['schemas']['PostCommentDto'][]>([]);
+
+  function addPostCommentChild(child: components['schemas']['PostCommentDto']) {
+    postCommentChildren.unshift(child);
+  }
+
+  function setPostCommentChildren(children: components['schemas']['PostCommentDto'][]) {
+    postCommentChildren = children;
+  }
+
+  async function showChildren(parentComment: components['schemas']['PostCommentDto']) {
+    forChildrenPostComment = parentComment;
+
+    setTimeout(() => {
+      postCommentChildrenModal.showModal();
+    });
+  }
 </script>
 
 <h2>댓글 목록</h2>
@@ -155,7 +177,7 @@
 
             {#if postComment.childrenCount > 0}
               <div>
-                <button class="btn">
+                <button class="btn" onclick={() => showChildren(postComment)}>
                   총 {postComment.childrenCount}개의 답글
                 </button>
               </div>
@@ -186,5 +208,16 @@
     title={`댓글 "${forReplyParentPostComment.body}" 에 대한 답글`}
     save={saveReplyPostComment}
     submitBtnText="답글 작성"
+  />
+{/if}
+
+{#if forChildrenPostComment}
+  <PostCommentChildrenModal
+    bind:this={postCommentChildrenModal}
+    {post}
+    postComment={forChildrenPostComment}
+    children={postCommentChildren}
+    {setPostCommentChildren}
+    {addPostCommentChild}
   />
 {/if}
