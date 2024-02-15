@@ -3,12 +3,17 @@
   import rq from '$lib/rq/rq.svelte';
   import type { components } from '$lib/types/api/v1/schema';
   import { prettyDateTime } from '$lib/utils';
+  import PostCommentEditModal from './PostCommentEditModal.svelte';
 
-  const { post, postComments, deletePostComment } = $props<{
+  const { post, postComments, deletePostComment, modifyPostComment } = $props<{
     post: components['schemas']['PostWithBodyDto'];
     postComments: components['schemas']['PostCommentDto'][];
     deletePostComment: (postComment: components['schemas']['PostCommentDto']) => void;
+    modifyPostComment: (postComment: components['schemas']['PostCommentDto']) => void;
   }>();
+
+  let forEditPostComment = $state<components['schemas']['PostCommentDto'] | undefined>();
+  let postCommentEditModal = $state() as any;
 
   async function confirmAndDeletePostComment(postComment: components['schemas']['PostCommentDto']) {
     if (!confirm('삭제하시겠습니까?')) return;
@@ -26,6 +31,34 @@
     deletePostComment(postComment);
 
     rq.msgInfo(data.msg);
+  }
+
+  function showEditModal(postComment: components['schemas']['PostCommentDto']) {
+    forEditPostComment = postComment;
+
+    postCommentEditModal.showModal();
+  }
+
+  async function save(
+    post: components['schemas']['PostWithBodyDto'],
+    postComment: components['schemas']['PostCommentDto'],
+    body: string
+  ) {
+    const { data } = await rq.apiEndPoints().PUT('/api/v1/postComments/{postId}/{postCommentId}', {
+      params: {
+        path: {
+          postId: post.id,
+          postCommentId: postComment.id
+        }
+      },
+      body: {
+        body
+      }
+    });
+
+    modifyPostComment(data!.data.item);
+
+    return data!.msg;
   }
 </script>
 
@@ -55,7 +88,9 @@
             {/if}
 
             {#if postComment.actorCanEdit}
-              <button class="btn btn-outline">수정</button>
+              <button class="btn btn-outline" onclick={() => showEditModal(postComment)}
+                >수정</button
+              >
             {/if}
 
             {#if postComment.actorCanReply}
@@ -75,3 +110,16 @@
     </li>
   {/each}
 </ul>
+
+{#if forEditPostComment}
+  {forEditPostComment.id}
+  {#key forEditPostComment.id}
+    <PostCommentEditModal
+      bind:this={postCommentEditModal}
+      {post}
+      postComment={forEditPostComment}
+      title="댓글 수정"
+      {save}
+    />
+  {/key}
+{/if}

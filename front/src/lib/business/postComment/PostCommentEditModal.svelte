@@ -64,6 +64,7 @@
           name="body"
           placeholder="댓글을 입력해주세요."
           class="input input-bordered w-full"
+          value={postComment.body}
         />
       </label>
 
